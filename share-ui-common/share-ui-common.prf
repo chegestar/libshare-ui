@@ -1,0 +1,17 @@
+###################################################################
+# share-ui-common library Feature for plugins
+###################################################################
+
+!contains(DEFINES, BUILD_SHARE_UI_COMMON) {
+    SHARE_UI_INC_DIR = /usr/include
+    SHARE_UI_LIB_DIR = /usr/lib
+
+    INCLUDEPATH += $${SHARE_UI_INC_DIR}
+    DEPENDPATH  += $${SHARE_UI_INC_DIR}
+
+    unix: QMAKE_FLAGS += $${QMAKE_LFLAGS_RPATH}$${SHARE_UI_LIB_DIR}
+    LIBS += -L$${SHARE_UI_LIB_DIR}
+    qtAddLibrary(share-ui-common) 
+    
+    CONFIG += mdatauri
+}

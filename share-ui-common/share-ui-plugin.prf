@@ -1,0 +1,24 @@
+###################################################################
+# share-ui library Feature for plugins
+###################################################################
+
+!contains(DEFINES, BUILD_SHARE_UI) {
+    SHARE_UI_INC_DIR = /usr/include
+    SHARE_UI_OLD_INC_DIR = /usr/include/share-ui
+    SHARE_UI_LIB_DIR = /usr/lib
+
+    INCLUDEPATH += $${SHARE_UI_INC_DIR} $${SHARE_UI_OLD_INC_DIR}
+    DEPENDPATH  += $${SHARE_UI_INC_DIR}
+
+    unix: QMAKE_FLAGS += $${QMAKE_RPATH}$${SHARE_UI_LIB_DIR}
+    LIBS += -L$${SHARE_UI_LIB_DIR}
+    qtAddLibrary(share-ui-common)
+    
+    # Adding the target path for the plugins
+    isEmpty(target.path) {
+        target.path  = /usr/lib/share-ui/plugins
+        INSTALLS += target
+    }      
+    
+    CONFIG += mdatauri    
+}

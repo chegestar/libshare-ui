@@ -1,0 +1,37 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+        "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.meego.ShareUiInterface">
+        <doc>
+            <arg tag="brief">
+                Interface to access the user interface for sharing items
+            </arg>
+            <arg tag="details">
+                Interface to access the user interface for sharing items. 
+            </arg>
+        </doc>
+
+        <method name="share">
+            <doc>
+                <arg tag="brief">
+                    Method called to launch the user interface for sharing
+                    items for the selected items
+                </arg>
+                <arg tag="details">
+                    The sharing application accepts a list of items. Each item
+                    can be something like Tracker IRI of a file, Data URI or
+                    File URI of a file indexed by tracker.
+
+                    The methods listed above are the items supported by the
+                    default sharing methods. Future extensions might add new
+                    item formats to the supported list.
+
+                    If the given item is not understood by the share method, it
+                    will be ignored and no error will be provided.
+
+                </arg>
+            </doc>
+            <arg name="items" type="as" direction="in"/>
+        </method>
+    </interface>
+</node>

@@ -1,0 +1,10 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: share-widgets
+Description: Share Widgets library
+Version: 0.2.0
+Libs: -L${libdir} -lshare-widgets
+Cflags: -I${includedir}

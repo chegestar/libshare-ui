@@ -1,0 +1,87 @@
+Source: libshare-ui
+Section: libs
+Priority: optional
+Maintainer: Jukka Tiihonen <jukka.t.tiihonen@nokia.com>
+Build-Depends: debhelper (>= 5.0.0), libmeegotouch-dev (>= 0.20.48),
+    libqt4-dev (>=4.5), doxygen, maemo-meegotouch-interfaces-dev (>= 0.3.20),
+    conbtdialogs-dev, aegis-builder,
+    libqtsparql-dev, libqtsparql-tracker-extensions-dev
+Standards-Version: 3.8.0
+
+Package: libshare-ui
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, xdg-utils, libmdatauri0
+Description: Share UI
+
+Package: libshare-ui-dev
+Section: libdevel
+Architecture: all
+Depends: libshare-ui (>= ${source:Version}), ${misc:Depends},
+ libshare-ui (<< ${source:Version}.1~), libmdatauri-dev (>= ${source:Version}),
+ libmdatauri-dev (<< ${source:Version}.1~), maemo-meegotouch-interfaces-dev,
+ pkg-config
+Description: Share UI development files
+ 
+Package: libshare-ui-dbg
+Section: devel
+Architecture: any
+Priority: extra
+Depends: libshare-ui (= ${binary:Version}), ${misc:Depends}
+Description: Share-UI library debug symbols
+
+Package: libshare-ui-utils
+Section: utils
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+    libshare-ui (>= ${source:Version}), 
+    libshare-ui (<< ${source:Version}.1~)
+Description: Testing applications for Share UI
+
+Package: libshare-ui-tests
+Section: devel
+Architecture: any
+Depends: busybox [armel], sudo [armel], ${shlibs:Depends}, ${misc:Depends}, 
+    libshare-ui (>= ${source:Version}), libshare-ui (<< ${source:Version}.1~), 
+    matti, ci-testing
+XB-Maemo-CI-Packages: libshare-ui
+XB-Maemo-CI-Stage: staging, acceptance
+Description: Tests for Share UI
+ Tests for Share UI
+
+Package: libshare-ui-doc
+Section: doc
+Architecture: all
+Description: API documentation for Share UI
+
+Package: libshare-ui-l10n-engineering-english
+Section: devel
+Architecture: all
+Depends: ${misc:Depends}
+Description: Contains engineering english translation for share-ui
+
+Package: libmdatauri0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: MeeGo Data URI library
+
+Package: libmdatauri-dev
+Section: libdevel
+Architecture: all
+Depends: libmdatauri0 (>= ${source:Version}), ${misc:Depends},
+ libmdatauri0 (<< ${source:Version}.1~), pkg-config
+Description: MeeGo Data URI library development files
+ 
+Package: libmdatauri0-dbg
+Section: devel
+Architecture: any
+Priority: extra
+Depends: libmdatauri0 (= ${binary:Version}), ${misc:Depends}
+Description: MeeGo Data URI library debug symbols
+
+Package: libmdatauri-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: API documentation for MeeGo Data URI library

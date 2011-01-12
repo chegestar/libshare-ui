@@ -1,0 +1,37 @@
+Share UI for MeeGo Handset UX
+=============================
+
+0. About
+--------
+
+Share UI is a set of libraries and executables that implements
+platform-wide selection of destinations to share content.
+
+Share UI features D-BUS interface to spawn UX-specific destination selector
+and provides clean API for extending list of destinations irrespective to the
+UX in use. UX-specific destination selector is clearly separated from the rest
+of the framework.
+
+UX-specific destination selector UI is implemented as a dynamically loadable module.
+The module is loaded by the UX-specific share-ui executable and asked to provide
+actual UI implementation. This allows to keep destination implementations common to
+whole platform while having actual UI visualization of them to follow specific
+requirements of a platform's UX implementation (Handset, Netbook, IVI, etc).
+
+1. Licensing
+------------
+
+Following parts of Share UI are licensed under LGPL v2.1:
+
+- mdatauri library in mdatauri/
+- common parts of Share UI in share-ui-common/
+- UI widgets abstraction library in widgets/
+
+Following parts of Share UI are licensed under MIT license:
+
+- examples in examples/ directory
+- share-ui sample executable for Handset UX in share-ui/
+- sample methods plugins for Bluetooth (using N900's D-BUS API)
+  and Email (using XDG xdg-email tool) in methods-plugins/
+- tests in tests/src/
+

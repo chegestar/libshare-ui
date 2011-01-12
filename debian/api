@@ -1,0 +1,21 @@
+interface: Share UI Extension API
+type: library
+scope: Platform
+state: stable
+libs-pkg: libshare-ui
+dev-pkg: libshare-ui-dev
+doc: libshare-ui-doc
+doc-type: doxygen
+headers:
+ /usr/include/ShareUI/*
+
+interface: Share Widgets Library
+type: library
+scope: Platform
+state: experimental
+libs-pkg: libshare-ui
+dev-pkg: libshare-ui-dev
+doc: libshare-ui-doc
+doc-type: doxygen
+headers:
+ /usr/include/ShareWidgets/*

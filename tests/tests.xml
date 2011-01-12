@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<testdefinition version="1.0">
+  <suite name="share-ui" domain="Media">
+    <set name="share-ui-functional" feature="share-ui functional tests">
+      <description>Testing the functionality of the utilities used in share-ui</description>
+      <pre_steps>
+        <step>sh /usr/share/libshare-ui-tests/tracker-copy.sh</step>
+      </pre_steps>
+      <case name="testFile" type="Functional" level="Component">
+        <description>Test the ShareUI::File class</description>
+        <step>sh /usr/share/libshare-ui-tests/run-test.sh testFile</step>
+      </case>
+      <case name="testContainer" type="Functional" level="Component">
+        <description>Test the ShareUI::FileContainer class</description>
+        <step>sh /usr/share/libshare-ui-tests/run-test.sh testContainer</step>
+      </case>
+      <!---
+      Commenting this test because the geoEngine library is causing problems
+      currently with this test case
+      <case name="testLoader" type="Functional" level="Component">
+        <description>Test the PluginLoader class</description>
+        <step>sh /usr/share/libshare-ui-tests/run-test.sh testLoader</step>
+      </case>
+      -->
+      <case name="pluginTests" type="Functional" level="Component">
+        <description>Test the provided plugins</description>
+        <step>sh /usr/share/libshare-ui-tests/run-test.sh pluginTests</step>
+      </case>
+      
+      <!-- DataURI tests -->
+      <case name="dataURITests" type="Functional" level="Component">
+        <description>Test the Data URI handling</description>
+        <step>/usr/bin/libshare-ui-tests testDataURIAttributes</step>
+        <step>/usr/bin/libshare-ui-tests testDataURIData</step>
+        <step>/usr/bin/libshare-ui-tests testDataURIMimeType</step>
+        <step>/usr/bin/libshare-ui-tests testValidDataURI</step>
+        <step>/usr/bin/libshare-ui-tests testDataURIEquality</step>                  
+      </case>
+      
+      <case name="dataUriItemTests" type="Functional" level="Component">
+        <step>/usr/bin/libshare-ui-tests testDataUriItem</step>
+      </case>
+      
+      <environments>
+        <scratchbox>true</scratchbox>
+        <hardware>true</hardware>
+      </environments>
+      <get>
+        <file>/home/user/.local/share/tracker/tracker-store.log</file>
+      </get>
+      <post_steps>
+        <step>sh /usr/share/libshare-ui-tests/tracker-clean.sh</step>
+      </post_steps>
+    </set>
+    
+    <!-- Disabled because of UI changes
+    <set name="share-ui-feature" feature="libshare-ui UI tests">
+      <description>Testing the UI functionality of share-ui using MATTI</description>
+      <pre_steps>
+        <step>/usr/bin/qttasserver - -nogui &amp;</step>
+      </pre_steps>
+      <case name="test_page_items" type="Functional" level="Feature">
+        <description>Testing all items are there on the page</description>
+        <step>/usr/bin/ruby /usr/share/libshare-ui-tests/ts_shareui.rb test_page_items</step>
+      </case>
+      <case name="test_bluetooth" type="Functional" level="Feature">
+        <description>Testing bluetooth button</description>
+        <step>/usr/bin/ruby /usr/share/libshare-ui-tests/ts_shareui.rb test_bluetooth</step>
+      </case>
+      <case name="test_email" type="Functional" level="Feature">
+        <description>Testing email button</description>
+        <step>/usr/bin/ruby /usr/share/libshare-ui-tests/ts_shareui.rb test_email</step>
+      </case>
+      <case name="test_launch_content_picker" type="Functional" 
+          level="Feature" timeout="120" insignificant="true">
+        <description>Testing content picker launches</description>
+        <step>/usr/bin/ruby /usr/share/libshare-ui-tests/ts_shareui.rb test_launch_content_picker</step>
+      </case>
+      <environments>
+        <scratchbox>true</scratchbox>
+        <hardware>true</hardware>
+      </environments>
+    </set>
+    -->
+    
+  </suite>
+</testdefinition>

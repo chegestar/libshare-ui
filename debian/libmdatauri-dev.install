@@ -1,0 +1,4 @@
+usr/include/MDataUri/*
+usr/lib/libmdatauri.so
+usr/lib/pkgconfig/mdatauri.pc
+usr/share/qt4/mkspecs/features/mdatauri.prf

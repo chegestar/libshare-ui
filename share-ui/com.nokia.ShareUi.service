@@ -1,0 +1,4 @@
+[D-BUS Service]
+Interface=com.nokia.maemo.meegotouch.ShareUiInterface
+Name=com.nokia.ShareUi
+Exec=/usr/bin/share-ui --service

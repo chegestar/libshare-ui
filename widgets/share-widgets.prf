@@ -1,0 +1,15 @@
+###################################################################
+# share-widgets library Feature
+###################################################################
+
+!contains(DEFINES, BUILD_SHARE_WIDGETS) {
+    SHARE_WIDGETS_INC_DIR = /usr/include
+    SHARE_WIDGETS_LIB_DIR = /usr/lib
+
+    INCLUDEPATH += $${SHARE_WIDGETS_INC_DIR}
+    DEPENDPATH  += $${SHARE_WIDGETS_INC_DIR}
+
+    unix: QMAKE_FLAGS += $${QMAKE_LFLAGS_RPATH}$${SHARE_WIDGETS_LIB_DIR}
+    LIBS += -L$${SHARE_WIDGETS_LIB_DIR}
+    qtAddLibrary(share-widgets)
+}

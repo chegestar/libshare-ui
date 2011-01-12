@@ -1,0 +1,5 @@
+libshare-ui (0.3.2.1) unstable; urgency=low
+
+  * Fixed mime type handling
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 12 Jan 2011 11:57:45 +0530

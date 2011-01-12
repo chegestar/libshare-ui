@@ -1,0 +1,15 @@
+###################################################################
+# MeeGo Data URI library Feature
+###################################################################
+
+!contains(DEFINES, BUILD_MDATAURI) {
+    MDATAURI_INC_DIR = /usr/include/MDataUri
+    MDATAURI_LIB_DIR = /usr/lib
+
+    INCLUDEPATH += $${MDATAURI_INC_DIR}
+    DEPENDPATH  += $${MDATAURI_INC_DIR}
+
+    unix: QMAKE_FLAGS += $${QMAKE_LFLAGS_RPATH}$${MDATAURI_LIB_DIR}
+    LIBS += -L$${MDATAURI_LIB_DIR}
+    qtAddLibrary(mdatauri)
+}
