@@ -49,11 +49,9 @@ public:
 
     /*!
       \brief Create new logger instance
-      \param appName Application name, used as path. QCoreApplication's
-                     information used if not provided.
       \param name Name of log. By default timestamp.
      */
-    Logger (const QString & appName = "", const QString & name = "");
+    Logger (const QString & name = QString());
 
     /*!
       \brief Destructor, closes the log file.
