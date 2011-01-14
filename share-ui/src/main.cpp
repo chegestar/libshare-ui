@@ -49,6 +49,10 @@ M_EXPORT int main (int argc, char **argv) {
     bool run_standalone = true;
     
     QCoreApplication::setApplicationName (QLatin1String ("Share UI"));
+    QCoreApplication::setOrganizationName (QLatin1String ("MeeGo"));    
+    
+    // Let's use custom logging
+    Logger logger;    
 
     // Use dynamic memory control to make sure free is successfull before we
     // print out bye message.
@@ -61,9 +65,6 @@ M_EXPORT int main (int argc, char **argv) {
     MLocale locale;
     locale.installTrCatalog ("transfer");
     MLocale::setDefault (locale);
-
-    // Let's use custom logging
-    Logger logger;
 
     Service * service = new Service();
 
