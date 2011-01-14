@@ -1,3 +1,9 @@
+libshare-ui (0.3.2.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 14 Jan 2011 13:43:50 +0530
+
 libshare-ui (0.3.2.1) unstable; urgency=low
 
   * Fixed mime type handling
