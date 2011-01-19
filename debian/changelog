@@ -1,3 +1,9 @@
+libshare-ui (0.3.3.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 19 Jan 2011 16:27:01 +0530
+
 libshare-ui (0.3.3.1) unstable; urgency=low
 
   * Fix application name (logging issues)
