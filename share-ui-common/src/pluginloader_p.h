@@ -31,6 +31,8 @@
 #include <ShareUI/PluginBase>
 #include <QMap>
 #include <QSettings>
+#include <QList>
+#include <QRegExp>
 
 namespace ShareUI {
 
@@ -81,6 +83,22 @@ namespace ShareUI {
          */
         int promotedOrderValue (ShareUI::MethodBase * method);
         
+        /*!
+          \brief Build regexp list from qstringlist
+          \param input Input stringlist
+          \param output Output regexp list
+         */
+        void buildRegExpList (const QStringList & input,
+            QList<QRegExp> & output);
+            
+        /*!
+          \brief Find regexp matching to given name
+          \param list List of regexps
+          \param name Name searched
+          \return index of first found regexpression or -1 if not found
+         */
+        int findRegExp (const QList<QRegExp> & list, const QString & name);
+        
     public Q_SLOTS:
 
         /*!
@@ -113,8 +131,8 @@ namespace ShareUI {
         QSettings m_pluginConfig;
 
         QStringList m_promotedPlugins; //!< List of promoted plugins
-        QStringList m_serviceOrder; //!< Order list for web services
-        QStringList m_otherOrder; //!< Order list for others
+        QList<QRegExp> m_serviceOrder; //!< Order list for web services
+        QList<QRegExp> m_otherOrder; //!< Order list for others
 
     Q_SIGNALS:
 

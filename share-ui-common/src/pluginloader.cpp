@@ -24,12 +24,23 @@
 #include "ShareUI/PluginBase"
 #include <QDebug>
 #include <QFileInfo>
+#include <QRegExp>
+
+// Folder where plugins are loaded
+#define SHARE_UI_PLUGIN_FOLDER "/usr/lib/share-ui/plugins"
+// Path to configuration file (method/plugin ordering)
+#define SHARE_UI_CONF_PATH "/etc/share-ui.conf"
+// Filter for plugins
+#define SHARE_UI_PLUGIN_FILTER "lib*.so"
+
+#define SHARE_UI_PLUGIN_CLEAN_PREFIX "lib"
+#define SHARE_UI_PLUGIN_CLEAN_SUFFIX ".so"
 
 using namespace ShareUI;
 
 PluginLoader::PluginLoader(QObject * parent) : QObject (parent),
-    d_ptr (new PluginLoaderPrivate ("/usr/lib/share-ui/plugins",
-    "/etc/share-ui.conf", this)) {
+    d_ptr (new PluginLoaderPrivate (SHARE_UI_PLUGIN_FOLDER,
+    SHARE_UI_CONF_PATH, this)) {
     
     connect (d_ptr, SIGNAL (newMethod(ShareUI::MethodBase*)), this,
         SIGNAL(newMethod(ShareUI::MethodBase*)));
@@ -97,7 +108,7 @@ bool PluginLoader::loadPlugins () {
 
     // Get list of plugin files
     QStringList filters;
-    filters << "lib*.so";
+    filters << SHARE_UI_PLUGIN_FILTER;
     dir.setNameFilters (filters);
     QStringList soFiles = dir.entryList (filters, QDir::Files, QDir::Name);
     
@@ -190,16 +201,6 @@ void PluginLoader::unload() {
     d_ptr->m_loaders.clear();
 }
 
-QList <ShareUI::MethodBase *> PluginLoader::methodsWithType (
-    ShareUI::MethodBase::Type type) const {
-    
-    Q_UNUSED (type);
-    
-    QList <ShareUI::MethodBase *> dest;
-       
-    return dest;
-}
-
 QList <ShareUI::MethodBase *> PluginLoader::methods () const {
     return d_ptr->m_loadedMethods;
 }
@@ -257,19 +258,28 @@ PluginLoaderPrivate::PluginLoaderPrivate (const QString & pluginDir,
     const QString & confFile, PluginLoader * parent) : QObject (parent),
     m_pluginDir (pluginDir), m_pluginConfig (confFile, QSettings::IniFormat) {
     
-
     m_promotedPlugins = m_pluginConfig.value (
         "promoted/plugins").toStringList();    
-    m_serviceOrder = m_pluginConfig.value ("services/order").toStringList();
-    m_otherOrder = m_pluginConfig.value ("others/order").toStringList();
+        
+    buildRegExpList (m_pluginConfig.value ("services/order").toStringList(),
+        m_serviceOrder);    
     
-    qDebug() << "Promoted config:" << m_promotedPlugins.join(",");
-    qDebug() << "Services config:" << m_serviceOrder.join(",");
-    qDebug() << "Others config:" << m_otherOrder.join(",");        
+    buildRegExpList (m_pluginConfig.value ("others/order").toStringList(),
+        m_otherOrder);
+
 }
 
 PluginLoaderPrivate::~PluginLoaderPrivate () {
 
+}
+
+void PluginLoaderPrivate::buildRegExpList (const QStringList & input,
+    QList<QRegExp> & output) {
+        
+    QStringListIterator iter (input);
+    while (iter.hasNext()) {
+        output.append (QRegExp (iter.next()));
+    }
 }
 
 int PluginLoaderPrivate::promotedOrderValue (ShareUI::MethodBase * method) {
@@ -297,13 +307,13 @@ int PluginLoaderPrivate::subOrderValue (ShareUI::MethodBase * method,
         return 0;
     }    
 
-    QStringList * listPtr = &m_otherOrder;    
+    QList<QRegExp> & list = m_otherOrder;  
     if (type == ShareUI::MethodBase::TYPE_WEB_SERVICE) {
-        listPtr = &m_serviceOrder;
+        list = m_serviceOrder;
     }
     
     // No list return always 0
-    if (listPtr->isEmpty() == true) {
+    if (list.isEmpty() == true) {
         return 0;
     }    
         
@@ -312,28 +322,47 @@ int PluginLoaderPrivate::subOrderValue (ShareUI::MethodBase * method,
     longId.append ("/");
     longId.append (id);
     
-    //TODO: Replace with list own search function
-    int found = listPtr->indexOf (longId);
+    int found = findRegExp (list, longId);
     if (found >= 0) {
-        return listPtr->count() - found;
-    }
+        return list.count() - found;
+    }    
 
     return 0;
 }
 
+int PluginLoaderPrivate::findRegExp (const QList<QRegExp> & list,
+    const QString & name) {
+    
+    int i = 0;
+    
+    QListIterator<QRegExp> iter (list);
+    while (iter.hasNext()) {
+        if (iter.next().exactMatch (name) == true) {
+            return i;
+        }
+        ++i;
+    }
+    
+    return -1;
+}
+
 QString PluginLoaderPrivate::loaderToName (QPluginLoader * loader) {
+
+    static QString cleanPrefix = QLatin1String (SHARE_UI_PLUGIN_CLEAN_PREFIX);
+    static QString cleanSuffix = QLatin1String (SHARE_UI_PLUGIN_CLEAN_SUFFIX);    
+
     QString path = loader->fileName();
     
     QFileInfo fInfo (path);
     
-    QString name = fInfo.fileName();
+    QString name = fInfo.fileName();   
     
     // Cut out parts of filename
-    if (name.startsWith ("lib")) {
-        name.remove (0, 3);
+    if (name.startsWith (cleanPrefix) == true) {
+        name.remove (0, cleanPrefix.length());
     }
-    if (name.endsWith (".so")) {
-        name.chop (3);
+    if (name.endsWith (cleanSuffix) == true) {
+        name.chop (cleanSuffix.length());
     }
 
     return name;
@@ -388,5 +417,5 @@ void PluginLoaderPrivate::methodVisible (bool visible) {
         return;
     }
     
-    emit (methodVisible(method, visible));
+    Q_EMIT (methodVisible(method, visible));
 }
