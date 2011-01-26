@@ -1,3 +1,4 @@
+CONFIG += ordered
 TEMPLATE        = subdirs
 SUBDIRS        += mdatauri \
                   share-ui-common \

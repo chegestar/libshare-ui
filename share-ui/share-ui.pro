@@ -3,6 +3,7 @@ CONFIG += qt debug meegotouch link_pkgconfig
 QT += dbus 
 
 CONFIG += meegotouch-boostable
+CONFIG += meego-com
 
 # profiling
 CONFIG(profiling) {
@@ -24,7 +25,7 @@ INCLUDEPATH += ../share-ui-common \
                ../libsharewidgets/src
 
 CONFIG(meego-com) {
-    system(qdbusxml2cpp -a shareuiinterfaceadaptor com.meego.ShareUiInterface)
+    system(qdbusxml2cpp -a shareuiinterfaceadaptor com.meego.ShareUiInterface.xml)
     service.files = com.meego.ShareUi.service
     DEFINES += MEEGO_COM
 } else {
@@ -34,6 +35,7 @@ CONFIG(meego-com) {
     system(cp /usr/share/dbus-1/interfaces/com.nokia.maemo.meegotouch.ShareUiInterface.xml .)
     system(m-servicefwgen -a com.nokia.maemo.meegotouch.ShareUiInterface)
     service.files = com.nokia.ShareUi.service
+    QMAKE_CLEAN += com.nokia.maemo.meegotouch.ShareUiInterface.xml
 }
 VPATH       += $$DEPENDPATH $$INCLUDEPATH
 
@@ -48,8 +50,7 @@ QMAKE_CLEAN += obj/* \
 include (share-ui-source.pri)
 SOURCES += shareuiinterfaceadaptor.cpp
 
-QMAKE_CLEAN += com.nokia.maemo.meegotouch.ShareUiInterface.xml \
-               shareuiinterfacedaptor.h \
+QMAKE_CLEAN += shareuiinterfaceadaptor.h \
                shareuiinterfaceadaptor.cpp
 
 INCLUDEPATH += .

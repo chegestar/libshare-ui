@@ -1,0 +1,23 @@
+#!/bin/bash
+
+PROJECT=libshare-ui
+
+# Grab most recent tag from git. 
+TAG=$(git tag | tail -n1)
+
+# Tag will be v#####.  Strip off the initial "v" to get the version number.
+VERSION=${TAG#v}
+
+# Set name of toplevel directory for the archive
+PREFIX="${PROJECT}-${VERSION}/"
+
+# Set name of resulting release archive file
+ARCHIVE=${PROJECT}-${VERSION}.tar.bz2
+
+[ -e ${ARCHIVE} ] && rm -rf ${ARCHIVE} && echo "Removed: ${ARCHIVE}"
+
+git archive --format=tar --prefix=${PREFIX} $TAG | bzip2 -c -- > ${ARCHIVE} && {
+	echo "Created: ${ARCHIVE}"
+} || {
+	echo "Creation of release archive ${ARCHIVE} failed.  Reason unknown."
+}

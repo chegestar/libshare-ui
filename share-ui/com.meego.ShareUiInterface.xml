@@ -12,7 +12,7 @@
         </doc>
 
         <method name="share">
-            <doc>
+            <!--doc>
                 <arg tag="brief">
                     Method called to launch the user interface for sharing
                     items for the selected items
@@ -30,7 +30,7 @@
                     will be ignored and no error will be provided.
 
                 </arg>
-            </doc>
+            </doc-->
             <arg name="items" type="as" direction="in"/>
         </method>
     </interface>
