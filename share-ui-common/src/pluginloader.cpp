@@ -26,15 +26,30 @@
 #include <QFileInfo>
 #include <QRegExp>
 
+#ifndef SHARE_UI_PLUGIN_FOLDER
 // Folder where plugins are loaded
 #define SHARE_UI_PLUGIN_FOLDER "/usr/lib/share-ui/plugins"
+#endif
+
+#ifndef SHARE_UI_CONF_PATH
 // Path to configuration file (method/plugin ordering)
 #define SHARE_UI_CONF_PATH "/etc/share-ui.conf"
+#endif
+
+#ifndef SHARE_UI_PLUGIN_FILTER
 // Filter for plugins
 #define SHARE_UI_PLUGIN_FILTER "lib*.so"
+#endif
 
+#ifndef SHARE_UI_PLUGIN_CLEAN_PREFIX
+// Prefix in plugin files that removed to get name of plugin
 #define SHARE_UI_PLUGIN_CLEAN_PREFIX "lib"
+#endif
+
+#ifndef SHARE_UI_PLUGIN_CLEAN_SUFFIX
+// Suffix in plugin files that removed to get name of plugin
 #define SHARE_UI_PLUGIN_CLEAN_SUFFIX ".so"
+#endif
 
 using namespace ShareUI;
 
@@ -119,7 +134,6 @@ bool PluginLoader::loadPlugins () {
         qDebug() << "Loading plugin" << *iter;
         QPluginLoader * loader = new QPluginLoader (this);
         loader->setFileName (dir.filePath((*iter)));
-        qDebug() << "Method loader hints set";
         loader->setLoadHints (QLibrary::ExportExternalSymbolsHint);
         
         // Check if plugin can be loaded
@@ -150,7 +164,6 @@ bool PluginLoader::loadPlugins () {
                     }
                 }
                 
-                qDebug() << "Plugin loaded with" << loaded << "new methods";
                 d_ptr->m_loaders.append (loader);
                 
                 QObject::connect (plugin,
@@ -175,9 +188,8 @@ bool PluginLoader::loadPlugins () {
     }
     
     if (d_ptr->m_loaders.count() > 0) {
-        qDebug() << "Load summary:";
-        qDebug() << d_ptr->m_loaders.count() << "Share UI plugin(s) loaded with"
-            << d_ptr->m_loadedMethods.count() << "method(s)";
+        qDebug() << "Method load summary:" << d_ptr->m_loaders.count()
+            << "plugin(s) and" << d_ptr->m_loadedMethods.count() << "method(s)";
         return true;
     } else {
         qWarning() << "No plugins found";
@@ -195,7 +207,7 @@ void PluginLoader::unload() {
 
     for (int i = 0; i < d_ptr->m_loaders.count(); ++i) {
         QPluginLoader * loader = d_ptr->m_loaders.at(i);       
-        qDebug() << loader->unload();
+        loader->unload();
         delete loader;
     }
     d_ptr->m_loaders.clear();
@@ -278,7 +290,18 @@ void PluginLoaderPrivate::buildRegExpList (const QStringList & input,
         
     QStringListIterator iter (input);
     while (iter.hasNext()) {
-        output.append (QRegExp (iter.next()));
+        QString value = iter.next();
+        if (value.isEmpty() == true) {
+            continue;
+        }
+        
+        //Only use wildcard mode (KISS)
+        QRegExp regexp (value, Qt::CaseSensitive, QRegExp::Wildcard);
+        if (regexp.isValid() == true) {
+            output.append (regexp);
+        } else {
+            qWarning() << "Invalid ordering value ignored:" << value;
+        }
     }
 }
 
@@ -303,28 +326,29 @@ int PluginLoaderPrivate::subOrderValue (ShareUI::MethodBase * method,
     
     // No id return always 0
     QString id = method->id();
-    if (id.isEmpty() == true) {
+    if (id.isEmpty() == true) {   
         return 0;
     }    
 
-    QList<QRegExp> & list = m_otherOrder;  
+    const QList<QRegExp> * list = &m_otherOrder;  
     if (type == ShareUI::MethodBase::TYPE_WEB_SERVICE) {
-        list = m_serviceOrder;
+        list = &m_serviceOrder;
     }
     
-    // No list return always 0
-    if (list.isEmpty() == true) {
+    // If no list -> always 0 (less than found)
+    if (list->isEmpty() == true) {
         return 0;
     }    
         
-    //Construct longId used in lists
+    // Construct longId used in lists (plugin name + / + method id)
     QString longId = pluginNameForMethod (method);
     longId.append ("/");
     longId.append (id);
     
-    int found = findRegExp (list, longId);
+    // Use regexp finder (wildcard support)
+    int found = findRegExp (*list, longId);
     if (found >= 0) {
-        return list.count() - found;
+        return list->count() - found;
     }    
 
     return 0;
@@ -337,7 +361,8 @@ int PluginLoaderPrivate::findRegExp (const QList<QRegExp> & list,
     
     QListIterator<QRegExp> iter (list);
     while (iter.hasNext()) {
-        if (iter.next().exactMatch (name) == true) {
+        QRegExp regexp = iter.next();
+        if (regexp.exactMatch (name) == true) {
             return i;
         }
         ++i;

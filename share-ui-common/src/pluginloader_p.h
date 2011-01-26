@@ -84,15 +84,15 @@ namespace ShareUI {
         int promotedOrderValue (ShareUI::MethodBase * method);
         
         /*!
-          \brief Build regexp list from qstringlist
+          \brief Build wildcard regexp list from qstringlist
           \param input Input stringlist
-          \param output Output regexp list
+          \param output Output regexp list (will append regexps to given list)
          */
         void buildRegExpList (const QStringList & input,
             QList<QRegExp> & output);
             
         /*!
-          \brief Find regexp matching to given name
+          \brief Find (wildcard) matching to given name
           \param list List of regexps
           \param name Name searched
           \return index of first found regexpression or -1 if not found
