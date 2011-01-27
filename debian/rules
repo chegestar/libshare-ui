@@ -34,6 +34,9 @@ endif
 	
 config.status: configure
 	dh_testdir
+	# Filter out meego-com for Maemo 6 builds
+	cat share-ui/share-ui.pro | grep -v 'CONFIG += meego-com' >share-ui/share-ui-.pro
+	mv share-ui/share-ui-.pro share-ui/share-ui.pro
 	qmake -o Makefile libshare-ui.pro
     
 configure: configure-stamp
