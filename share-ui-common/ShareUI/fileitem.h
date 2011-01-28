@@ -115,7 +115,7 @@ namespace ShareUI {
         QString fileUri () const;
         
         /*!
-          \brief Get file URI (percent encoded URI)
+          \brief Get file URI
           \return URI or empty if not defined
          */
         QUrl URI() const;
