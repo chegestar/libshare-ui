@@ -111,6 +111,9 @@ namespace ShareUI {
         ShareUI::FileItem * m_parent;
 
         QSparqlConnection *m_sparqlConnection;
+
+        //! file path with any % encoding that might have been there
+        QUrl m_encodedFileUrl;
         
         void updateFromTracker();
 
