@@ -104,13 +104,7 @@ namespace ShareUI {
               \return Pointer to method class or null if at is out of range
              */
             ShareUI::MethodBase * method (int at);
-            
-            /*!
-              \brief Deprecated. Use methods()
-             */
-            Q_DECL_DEPRECATED QList <ShareUI::MethodBase *> methodsWithType (
-                ShareUI::MethodBase::Type type) const;
-                
+                            
             /*!
               \brief Get current list of methods. Useful to call initial list of
                      loaded methods at the beginning. Later use newMethod signal

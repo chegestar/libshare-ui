@@ -11,6 +11,10 @@ CONFIG(profiling) {
 DEFINES += SUI_EXPORTS
 QMAKE_CXXFLAGS += -O2 -Werror -Wall
 
+#define descriptions in pluginloader.cpp file
+#TODO: is there better way to do this with qmake?
+DEFINES+="SHARE_UI_PLUGIN_FOLDER=\\\"$$[QT_INSTALL_LIBS]/share-ui/plugins\\\"
+
 VER_MAJ=0
 VER_MIN=2
 VER_PAT=0
