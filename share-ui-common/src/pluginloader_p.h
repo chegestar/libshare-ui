@@ -98,8 +98,13 @@ namespace ShareUI {
           \return index of first found regexpression or -1 if not found
          */
         int findRegExp (const QList<QRegExp> & list, const QString & name);
-        
+
     public Q_SLOTS:
+
+        /*!
+          \brief Does the actual plugin loading
+        */
+        void doLoadPlugins();
 
         /*!
           \brief Slot for plugin's newMethod signal
@@ -110,6 +115,13 @@ namespace ShareUI {
           \brief Slot for ShareUI::MethodBase::visible
          */
         void methodVisible (bool visible);
+
+        /*!
+          \brief Initializes a plugin that has been loaded
+          \param loader Loaded plugin, 0 if failed
+          \param last Was the loaded plugin the last one
+        */
+        void pluginLoaded(QPluginLoader *loader, bool last);
 
     public:
             
@@ -134,6 +146,8 @@ namespace ShareUI {
         QList<QRegExp> m_serviceOrder; //!< Order list for web services
         QList<QRegExp> m_otherOrder; //!< Order list for others
 
+        QStringList m_pluginLoadQueue; //!< Plugins not yet loaded
+
     Q_SIGNALS:
 
         /*!
@@ -145,6 +159,18 @@ namespace ShareUI {
           \brief See PluginLoader::methodVisible
          */
         void methodVisible (ShareUI::MethodBase * method, bool visible);
+
+        /*!
+          \brief Signal emitted when loading a plugin has finished
+          \param loader Finished loader. Zero if plugin loading failed
+          \param last Was the loaded plugin the last one
+        */
+        void loadingDone (QPluginLoader *loader, bool last);
+
+        /*!
+          \brief Signal emitted when all plugins have been loaded
+        */
+        void allPluginsLoaded ();
 
     };
 }

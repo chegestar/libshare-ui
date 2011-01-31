@@ -35,7 +35,6 @@
 #include <QCoreApplication>
 #include <QTimer>
 
-
 Service::Service(QObject *parent) : QObject(parent) {
 }
 
@@ -46,6 +45,7 @@ Service::~Service() {
 void Service::share (const QStringList &fileList) {
 
     MApplicationWindow * window = MComponentCache::mApplicationWindow();
+
     qDebug() << "Created window " << window;
 
     ShareUI::ItemContainer * container = new ShareUI::ItemContainer (0, this);
@@ -54,23 +54,24 @@ void Service::share (const QStringList &fileList) {
     }
     
     ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader ();
-    if (pLoader->pluginCount() == 0 &&
-        pLoader->loadPlugins () == false) {
-        
-        qCritical() << "Failed to load plugins";
-    }
+
         
     ShareWidgets::ApplicationViewInterface * iface =
         m_uiLoader.newDefaultApplicationView(pLoader, container);
     
     MApplicationPage * page = dynamic_cast<MApplicationPage*>(iface);
+
     
     if (page != 0) {
         connect (page, SIGNAL(shutdown()), this, SLOT(closeWindow()));
         connect (page, SIGNAL(closeButtonClicked()), this, SLOT(closeWindow()));
+        if (pLoader->pluginCount() == 0) {
+            connect (page, SIGNAL(appeared()), pLoader, SLOT(loadPlugins()));
+        }
         window->show();
         page->appear (window);    
         connect (page, SIGNAL(destroyed()), pLoader, SLOT (deleteLater()));
+
     } else {
         delete pLoader;
         delete window;

@@ -30,6 +30,7 @@
 #include <ShareUI/PluginBase>
 #include <QMap>
 #include <QSettings>
+#include <QThread>
 
 namespace ShareUI {
 
@@ -66,13 +67,6 @@ namespace ShareUI {
               \return Plugin path
              */
             QString pluginPath() const;
-            
-            /*!
-              \brief Load all valid plugins found in plugin path. If plugins are
-                     already loaded then this function will fail.
-              \return true if one or more plugin was successfully loaded
-             */
-            bool loadPlugins ();
                     
             /*!
                \brief Unloads all plugins. Instances will be invalid after this.
@@ -129,6 +123,15 @@ namespace ShareUI {
              */
             bool methodOrderingValues (ShareUI::MethodBase * method, 
                 int & order, int & suborder);
+
+        public Q_SLOTS:
+
+            /*!
+              \brief Starts loading all valid plugins found in plugin path. If
+                     plugins are already loaded then this function will fail.
+              \return true if plugin loading was started successfully
+             */
+            bool loadPlugins ();
                        
         Q_SIGNALS:
             
@@ -147,6 +150,11 @@ namespace ShareUI {
                              then it must be hidden from the user.
              */
             void methodVisible (ShareUI::MethodBase * method, bool visible);
+
+            /*!
+              \brief Signal emitted when all plugins have been loaded
+            */
+            void allPluginsLoaded ();
             
         private:
         

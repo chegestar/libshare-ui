@@ -25,6 +25,8 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QRegExp>
+#include <QtConcurrentRun>
+#include <QTimer>
 
 #ifndef SHARE_UI_PLUGIN_FOLDER
 // Folder where plugins are loaded
@@ -62,6 +64,9 @@ PluginLoader::PluginLoader(QObject * parent) : QObject (parent),
         
     connect (d_ptr, SIGNAL (methodVisible(ShareUI::MethodBase*,bool)), this,
         SIGNAL(methodVisible(ShareUI::MethodBase*,bool)));
+
+    connect (d_ptr, SIGNAL (allPluginsLoaded()),
+        this, SIGNAL (allPluginsLoaded()));
 }
 
 PluginLoader::~PluginLoader() {
@@ -125,76 +130,21 @@ bool PluginLoader::loadPlugins () {
     QStringList filters;
     filters << SHARE_UI_PLUGIN_FILTER;
     dir.setNameFilters (filters);
-    QStringList soFiles = dir.entryList (filters, QDir::Files, QDir::Name);
-    
-    // Load found plugins
-    QStringList::const_iterator iter;
-    for (iter = soFiles.constBegin(); iter != soFiles.constEnd(); ++iter) {
-        
-        qDebug() << "Loading plugin" << *iter;
-        QPluginLoader * loader = new QPluginLoader (this);
-        loader->setFileName (dir.filePath((*iter)));
-        loader->setLoadHints (QLibrary::ExportExternalSymbolsHint);
-        
-        // Check if plugin can be loaded
-        if (loader->load() == true) {
-            QObject * obj = loader->instance();
-            
-            ShareUI::PluginBase * plugin =
-                qobject_cast<ShareUI::PluginBase *>(obj);
-                
-            if (plugin != 0 && plugin->init()) {
-            
-                d_ptr->m_pluginLoaderMap.insert (plugin, loader);
-            
-                QList <ShareUI::MethodBase *> pluginMethods =
-                    plugin->methods (this);
-                
-                int loaded = 0;
-                for (int i = 0; i < pluginMethods.size(); ++i) {
-                    ShareUI::MethodBase * met = pluginMethods.at (i);
-                                        
-                    if (met != 0) {
-                        d_ptr->m_methodPluginMap.insert (met, plugin);
-                        d_ptr->m_loadedMethods.append (met);
-                        ++loaded;
-                        
-                        connect (met, SIGNAL (visible(bool)), d_ptr,
-                            SLOT (methodVisible(bool)));
-                    }
-                }
-                
-                d_ptr->m_loaders.append (loader);
-                
-                QObject::connect (plugin,
-                    SIGNAL (newMethod(ShareUI::MethodBase*)), d_ptr,
-                    SLOT (newMethodFromPlugin(ShareUI::MethodBase*)));
-            
-            } else {
-                if (plugin != 0) {
-                    qCritical() << "Initalization failed with plugin";
-                    delete plugin;
-                }
-            
-                qCritical() << "Plugin not accepted";
-                delete loader;
-            }
-            
-        } else {
-            qCritical() << "Failed to load plugin:" << loader->errorString();
-            delete loader;
-        }
+    d_ptr->m_pluginLoadQueue = dir.entryList (filters, QDir::Files, QDir::Name);
 
-    }
-    
-    if (d_ptr->m_loaders.count() > 0) {
-        qDebug() << "Method load summary:" << d_ptr->m_loaders.count()
-            << "plugin(s) and" << d_ptr->m_loadedMethods.count() << "method(s)";
-        return true;
-    } else {
+    if (d_ptr->m_pluginLoadQueue.isEmpty()) {
         qWarning() << "No plugins found";
-        return false;
     }
+    else {
+        qDebug() << "Starting to load plugins, number of plugins found:" <<
+            d_ptr->m_pluginLoadQueue.size();
+
+        // Give some time for the UI to show itself, so that plugin loading
+        // won't disturb the page appearing animation.
+        QTimer::singleShot(100, d_ptr, SLOT(doLoadPlugins()));
+    }
+
+    return true;
 }
 
 void PluginLoader::unload() {
@@ -278,6 +228,9 @@ PluginLoaderPrivate::PluginLoaderPrivate (const QString & pluginDir,
     
     buildRegExpList (m_pluginConfig.value ("others/order").toStringList(),
         m_otherOrder);
+
+    connect(this, SIGNAL(loadingDone(QPluginLoader*, bool)),
+        this, SLOT(pluginLoaded(QPluginLoader*, bool)), Qt::QueuedConnection);
 
 }
 
@@ -443,4 +396,86 @@ void PluginLoaderPrivate::methodVisible (bool visible) {
     }
     
     Q_EMIT (methodVisible(method, visible));
+}
+
+void PluginLoaderPrivate::pluginLoaded(QPluginLoader *loader, bool last) {
+
+    if (loader != 0) {
+
+        loader->setParent(this);
+
+        QObject * obj = loader->instance();
+
+        ShareUI::PluginBase * plugin =
+            qobject_cast<ShareUI::PluginBase *>(obj);
+
+        if (plugin != 0 && plugin->init()) {
+
+            m_pluginLoaderMap.insert (plugin, loader);
+
+            QList <ShareUI::MethodBase *> pluginMethods =
+                plugin->methods (this);
+
+            int loaded = 0;
+            for (int i = 0; i < pluginMethods.size(); ++i) {
+                ShareUI::MethodBase * met = pluginMethods.at (i);
+
+                if (met != 0) {
+                    m_methodPluginMap.insert (met, plugin);
+                    m_loadedMethods.append (met);
+                    ++loaded;
+
+                    connect (met, SIGNAL (visible(bool)), this,
+                        SLOT (methodVisible(bool)));
+                }
+            }
+
+            m_loaders.append (loader);
+
+            QObject::connect (plugin,
+                SIGNAL (newMethod(ShareUI::MethodBase*)), this,
+                SLOT (newMethodFromPlugin(ShareUI::MethodBase*)));
+
+        } else {
+            if (plugin != 0) {
+                qCritical() << "Initalization failed with plugin";
+                delete plugin;
+            }
+
+            qCritical() << "Plugin not accepted";
+            delete loader;
+        }
+    }
+
+    if (last) {
+        qDebug() << "Method load summary:" << m_loaders.count()
+            << "plugin(s) and" << m_loadedMethods.count() << "method(s)";
+        Q_EMIT(allPluginsLoaded());
+    }
+}
+
+void PluginLoaderPrivate::doLoadPlugins() {
+
+    if (QThread::currentThread() == thread()) {
+        QtConcurrent::run(this, &PluginLoaderPrivate::doLoadPlugins);
+        return;
+    }
+
+    while (!m_pluginLoadQueue.isEmpty()) {
+        QString pluginName = m_pluginLoadQueue.takeFirst();
+        QPluginLoader * loader = new QPluginLoader ();
+        loader->setFileName (m_pluginDir.filePath(pluginName));
+        loader->setLoadHints (QLibrary::ExportExternalSymbolsHint);
+
+        if (loader->load()) {
+            loader->moveToThread(thread());
+        }
+        else {
+            qCritical() << "Failed to load plugin:" << loader->errorString();
+            delete loader;
+            loader = 0;
+        }
+
+        Q_EMIT(loadingDone(loader, m_pluginLoadQueue.isEmpty()));
+    }
 }
