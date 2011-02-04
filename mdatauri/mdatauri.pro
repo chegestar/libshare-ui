@@ -58,7 +58,9 @@ INSTALLS += target
 
 # API Documentation with Doxygen
 dox.path        = /usr/share/doc/mdatauri
-dox.commands    = doxygen doxygen.cfg
+!contains( DEFINES, NO_DOCS ) {
+    dox.commands    = doxygen doxygen.cfg
+}
 dox.depends     = inc
 dox.files       = doc/html/*
 dox.CONFIG     += no_check_exist

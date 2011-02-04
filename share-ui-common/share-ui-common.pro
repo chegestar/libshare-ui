@@ -85,11 +85,12 @@ INSTALLS += target
 
 # API Documentation with Doxygen
 dox.path        = /usr/share/doc/share-ui
-dox.commands    = doxygen doxygen.cfg
+!contains( DEFINES, NO_DOCS ) {
+    dox.commands    = doxygen doxygen.cfg
+}
 dox.depends     = ShareUI
 dox.files       = doc/html/*
 dox.CONFIG     += no_check_exist
 INSTALLS       += dox
 QMAKE_EXTRA_TARGETS += dox
-QMAKE_CLEAN += doc/html/*
 
