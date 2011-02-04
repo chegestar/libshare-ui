@@ -194,7 +194,6 @@ QList<QSharedPointer<Item> > FileItem::createList (
                 filePath = filePath.mid (2);
             }    
                 
-            qDebug() << "Strip Trying to find" << filePath;
             if (input.removeAll (filePath) > 0) {
                 constructInfo = filePath;
             } else if (input.removeAll (unencodedFilePathUri.toString()) > 0) {
@@ -204,8 +203,6 @@ QList<QSharedPointer<Item> > FileItem::createList (
                     unencodedFilePathUri.toString();
             }
         }
-        
-        DBG_STREAM << "Item accepted" << tIri;
         
         if (constructInfo.isEmpty () == false) {
             FileItem * fileItem = new FileItem (constructInfo);
