@@ -38,6 +38,6 @@ QString ShareUiDefaultMethods::makeFilePathForVCard (const MDataUri & duri) {
     }
 
     QString path = QDir::tempPath() + QDir::separator() + filename
-        + QLatin1String (".vcard");    
+        + QLatin1String (".vcf");    
     return path;
 }
