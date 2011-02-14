@@ -2,8 +2,6 @@ TEMPLATE = app
 CONFIG += qt debug meegotouch link_pkgconfig
 QT += dbus 
 
-CONFIG += meegotouch-boostable
-
 # profiling
 CONFIG(profiling) {
     message(Building with profiling)

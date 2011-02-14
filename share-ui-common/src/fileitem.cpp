@@ -109,9 +109,15 @@ QList<QSharedPointer<Item> > FileItem::createList (
             hasTrackerUriAlternative = true;
         } else {
             //Make sure URI has proper encoding
-            QString encodedUrl = fUrl.toEncoded();
+            // QUrl::toEncoded does not work since it does not encode the ';'
+            // character (bug 226163). Instead use toPercentEncoding to
+            // converting everything possible, except for the ':' and '/'
+            // characters to the corresponding percent encoding
+            QByteArray encodedUrl = 
+                QUrl::toPercentEncoding (fUrl.toString (), ":/");
             fileUrlList.append (encodedUrl);
-            fileUrls.append (QString("'%1',").arg(encodedUrl));
+            DBG_STREAM << "Searching tracker for file:" << encodedUrl;
+            fileUrls.append (QString("'%1',").arg(QString(encodedUrl)));
             if (hasFileUrlAlternative == false) alternativeSize++;
             hasFileUrlAlternative = true;
         }
@@ -229,7 +235,7 @@ QList<QSharedPointer<Item> > FileItem::createList (
     delete result;
     result = 0;
     
-    DBG_STREAM << input.count() << "item(s) not accepted";
+    DBG_STREAM << input.count() << "item(s) not accepted" << input;
     DBG_STREAM << __FUNCTION__ << "end";
 
     return list;
