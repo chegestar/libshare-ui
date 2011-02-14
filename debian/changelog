@@ -1,9 +1,9 @@
-libshare-ui (0.3.6.2) unstable; urgency=low
+libshare-ui (0.3.7.1) unstable; urgency=low
 
   * Fixes: NB#226163 - Supported applications are not listed when video with special characters are shared
   * Fixes: NB#226649 - Contact Share: File format to be changed from .vcard to .vcf
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 10 Feb 2011 16:08:26 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 14 Feb 2011 14:20:31 +0530
 
 libshare-ui (0.3.6.1) unstable; urgency=low
 
