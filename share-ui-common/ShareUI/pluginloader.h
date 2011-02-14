@@ -30,7 +30,6 @@
 #include <ShareUI/PluginBase>
 #include <QMap>
 #include <QSettings>
-#include <QThread>
 
 namespace ShareUI {
 
@@ -123,6 +122,13 @@ namespace ShareUI {
              */
             bool methodOrderingValues (ShareUI::MethodBase * method, 
                 int & order, int & suborder);
+
+            /*!
+              \brief Sets how long delay there will be after calling loadPlugins
+                before the plugin loading is actually started.
+              \param delay Delay in milliseconds
+            */
+            void setPluginLoadingDelay (int delay);
 
         public Q_SLOTS:
 

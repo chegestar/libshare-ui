@@ -148,6 +148,8 @@ namespace ShareUI {
 
         QStringList m_pluginLoadQueue; //!< Plugins not yet loaded
 
+        int m_pluginLoadingDelay; //!< Plugin loading delay in milliseconds
+
     Q_SIGNALS:
 
         /*!

@@ -66,6 +66,7 @@ void Service::share (const QStringList &fileList) {
         connect (page, SIGNAL(shutdown()), this, SLOT(closeWindow()));
         connect (page, SIGNAL(closeButtonClicked()), this, SLOT(closeWindow()));
         if (pLoader->pluginCount() == 0) {
+            pLoader->setPluginLoadingDelay(100);
             connect (page, SIGNAL(appeared()), pLoader, SLOT(loadPlugins()));
         }
         window->show();

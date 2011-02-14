@@ -3,7 +3,6 @@ CONFIG += qt debug meegotouch link_pkgconfig
 QT += dbus 
 
 CONFIG += meegotouch-boostable
-CONFIG += meego-com
 
 # profiling
 CONFIG(profiling) {

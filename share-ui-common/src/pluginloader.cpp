@@ -117,6 +117,10 @@ ShareUI::MethodBase * PluginLoader::method (int at) {
     return met;
 }
 
+void PluginLoader::setPluginLoadingDelay(int delay) {
+    d_ptr->m_pluginLoadingDelay = delay;
+}
+
 bool PluginLoader::loadPlugins () {
 
     if (d_ptr->m_loaders.count() > 0) {
@@ -141,7 +145,7 @@ bool PluginLoader::loadPlugins () {
 
         // Give some time for the UI to show itself, so that plugin loading
         // won't disturb the page appearing animation.
-        QTimer::singleShot(100, d_ptr, SLOT(doLoadPlugins()));
+        QTimer::singleShot(d_ptr->m_pluginLoadingDelay, d_ptr, SLOT(doLoadPlugins()));
     }
 
     return true;
@@ -218,7 +222,9 @@ bool PluginLoader::methodOrderingValues (ShareUI::MethodBase * method,
 
 PluginLoaderPrivate::PluginLoaderPrivate (const QString & pluginDir,
     const QString & confFile, PluginLoader * parent) : QObject (parent),
-    m_pluginDir (pluginDir), m_pluginConfig (confFile, QSettings::IniFormat) {
+    m_pluginDir (pluginDir), m_pluginConfig (confFile, QSettings::IniFormat),
+    m_pluginLoadingDelay(0)
+{
     
     m_promotedPlugins = m_pluginConfig.value (
         "promoted/plugins").toStringList();    
