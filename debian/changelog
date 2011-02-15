@@ -1,3 +1,9 @@
+libshare-ui (0.3.7.3) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 15 Feb 2011 13:57:47 +0530
+
 libshare-ui (0.3.7.2) unstable; urgency=low
 
   * Fixes: NB#227605 - Unable to launch ShareUI from Gallery or Video&TV application
