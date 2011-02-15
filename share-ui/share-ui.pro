@@ -2,6 +2,8 @@ TEMPLATE = app
 CONFIG += qt debug meegotouch link_pkgconfig
 QT += dbus 
 
+CONFIG += meego-com
+
 # profiling
 CONFIG(profiling) {
     message(Building with profiling)
@@ -9,7 +11,7 @@ CONFIG(profiling) {
     LIBS += -lgcov
 }
 
-QMAKE_CXXFLAGS += -O2 -Werror -Wall
+QMAKE_CXXFLAGS += -O2 -Werror -Wall -fPIC
 
 LIBS += ../widgets/out/libshare-widgets.so
 INCLUDEPATH += ../widgets
@@ -52,6 +54,7 @@ QMAKE_CLEAN += shareuiinterfaceadaptor.h \
 
 INCLUDEPATH += .
 LIBS += ../share-ui-common/out/libshare-ui-common.so
+LIBS += -rdynamic
 
 INCLUDEPATH += ../mdatauri/MDataURI
 LIBS += ../mdatauri/out/libmdatauri.so
