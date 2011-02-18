@@ -114,7 +114,7 @@ QList<QSharedPointer<Item> > FileItem::createList (
             // converting everything possible, except for the ':' and '/'
             // characters to the corresponding percent encoding
             QByteArray encodedUrl = 
-                QUrl::toPercentEncoding (fUrl.toString (), ":/");
+                QUrl::toPercentEncoding (fUrl.toString (), ":/()");
             fileUrlList.append (encodedUrl);
             DBG_STREAM << "Searching tracker for file:" << encodedUrl;
             fileUrls.append (QString("'%1',").arg(QString(encodedUrl)));

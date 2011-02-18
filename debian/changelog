@@ -1,8 +1,8 @@
 libshare-ui (0.3.7.3) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#226163 - Supported applications are not listed when video with special characters are shared
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 15 Feb 2011 13:57:47 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 18 Feb 2011 17:31:15 +0530
 
 libshare-ui (0.3.7.2) unstable; urgency=low
 
