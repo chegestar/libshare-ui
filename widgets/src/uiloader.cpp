@@ -35,7 +35,7 @@ UiLoader::~UiLoader () {
     delete d_ptr;
 }
 
-        ApplicationViewInterface * newDefaultApplicationView (
+ApplicationViewInterface * newDefaultApplicationView (
             ShareUI::PluginLoader * pluginLoader,
             ShareUI::ItemContainer * container);
 
@@ -61,9 +61,9 @@ ApplicationViewInterface * UiLoader::newDefaultApplicationView (
         
         ShareWidgets::UiImplementationBase * imple = 0;
         QObject * obj = loader->instance();
-        qDebug() << "Received object" << obj;
         
         if (obj != 0) {
+            qDebug() << "Received object" << obj;
             imple = qobject_cast <ShareWidgets::UiImplementationBase*> (obj);
         } else {
             qWarning() << "Did not receive QObject instance from plugin";
