@@ -111,10 +111,14 @@ QList<QSharedPointer<Item> > FileItem::createList (
             //Make sure URI has proper encoding
             // QUrl::toEncoded does not work since it does not encode the ';'
             // character (bug 226163). Instead use toPercentEncoding to
-            // converting everything possible, except for the ':' and '/'
-            // characters to the corresponding percent encoding
+            // converting everything possible, except for the characters given
+            // in the except list to the corresponding percent encoding
             QByteArray encodedUrl = 
-                QUrl::toPercentEncoding (fUrl.toString (), ":/()");
+                QUrl::toPercentEncoding (fUrl.toString (), ":/()=&@'!,");
+            if (encodedUrl.indexOf ('\'') >= 0) {
+                encodedUrl.insert (encodedUrl.indexOf ('\''), "\\");
+                qDebug() << "Escaped the \' character";
+            }
             fileUrlList.append (encodedUrl);
             DBG_STREAM << "Searching tracker for file:" << encodedUrl;
             fileUrls.append (QString("'%1',").arg(QString(encodedUrl)));
