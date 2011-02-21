@@ -70,7 +70,7 @@ Package: libmdatauri-dev
 Section: libdevel
 Architecture: all
 Depends: libmdatauri0 (>= ${source:Version}), ${misc:Depends},
- libmdatauri0 (<< ${source:Version}.1~), pkg-config
+ libmdatauri0 (<< ${source:Version}.1~), pkg-config, libqt4-dev
 Description: MeeGo Data URI library development files
  
 Package: libmdatauri0-dbg
