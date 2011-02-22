@@ -1,29 +1,29 @@
 #!/usr/bin/make -f
 # -*- makefile -*
- 	
+
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
- 	
+
 DEBDIR = ..
- 	
+
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
 CFLAGS = -Wall -g
- 	
+
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0
 else
 	CFLAGS += -O2
 endif
-	
+
 # Use soft-float and thumb mode if it enabled.
 ifneq (,$(findstring thumb,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -mthumb
 endif
-	
+
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
@@ -34,20 +34,19 @@ endif
 ifneq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
         EXTRA_QMAKE_OPTIONS += "DEFINES+=NO_DOCS"
 endif
-	
+
 config.status: configure
 	dh_testdir
 	# Filter out meego-com for Maemo 6 builds
-	cat share-ui/share-ui.pro | grep -v 'CONFIG += meego-com' >share-ui/share-ui-.pro
-	mv share-ui/share-ui-.pro share-ui/share-ui.pro
+	sed -i '/CONFIG += meego-com/d' commmon.pri
 	qmake -o Makefile libshare-ui.pro
-    
+
 configure: configure-stamp
 
 configure-stamp:
 	dh_testdir
 	touch configure-stamp
- 	
+
 build: build-stamp
 
 build-stamp:  config.status
@@ -82,7 +81,7 @@ install: build
 	dh_installdirs
 
 	$(MAKE) install INSTALL_ROOT=$(CURDIR)/debian/tmp	
- 
+
 # Build architecture-independent files here.
 binary-indep: build install
 # We have nothing to do by default.
@@ -105,10 +104,10 @@ binary-arch: build install
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb --destdir=$(DEBDIR)
-	
+
 aegis:	
 	aegis-deb-add -control debian/libshare-ui/DEBIAN/control .. debian/libshare-ui.aegis=_aegis
 	aegis-deb-add -control debian/libshare-ui-tests/DEBIAN/control .. debian/libshare-ui-tests.aegis=_aegis	
-	
+
 binary: binary-indep binary-arch aegis
 .PHONY: build clean binary-indep binary-arch binary install
