@@ -3,5 +3,4 @@ SOURCES += main.cpp \
            logger.cpp
 
 HEADERS += service.h \
-           logger.h \
-           shareuiinterfaceadaptor.h
+           logger.h

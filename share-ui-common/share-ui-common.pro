@@ -1,3 +1,5 @@
+include (../common.pri)
+
 CONFIG += qt debug link_pkgconfig qtsparql qtsparql-tracker-extensions
 TEMPLATE = lib
 

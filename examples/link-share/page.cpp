@@ -35,7 +35,7 @@
 #include <MTextEdit>
 #include <MApplicationWindow>
 #include <MDataUri>
-#include <shareuiinterface.h>
+#include "shareuiinterface.h"
 
 Page::Page (QGraphicsItem *parent) : MApplicationPage (parent) {
     setTitle ("Link Share");
@@ -106,7 +106,7 @@ void Page::shareClicked () {
     qDebug() << "URI:" << items.join (" ");
     
     // Create a interface object
-    ShareUiInterface shareIf;
+    ShareUiInterface shareIf(ShareUiInterface::staticInterfaceName(), "/", QDBusConnection::systemBus());
     
     // You can check if interface is valid
     if (shareIf.isValid()) {

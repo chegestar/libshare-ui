@@ -1,3 +1,5 @@
+include (common.pri)
+
 CONFIG += ordered
 TEMPLATE        = subdirs
 SUBDIRS        += mdatauri \
@@ -5,8 +7,10 @@ SUBDIRS        += mdatauri \
                   method-plugins \
                   widgets \                  
                   share-ui \
+                  share-ui-interface \
                   tests \
-                  translations
+                  translations \
+                  examples
 
 # Examples
 pluginexample.path = /usr/share/doc/share-ui/plugin-example

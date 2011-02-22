@@ -64,8 +64,8 @@ namespace ShareUI {
     };
 }
 
+#define PLUGIN_INTERFACE "#DBUS_SERVICE" ".pluginInterface/1.0"
+Q_DECLARE_INTERFACE(ShareUI::PluginInterface, PLUGIN_INTERFACE);
 
-Q_DECLARE_INTERFACE(ShareUI::PluginInterface,
-    "com.nokia.shareUi.pluginInterface/1.0");
 
 #endif // #ifndef _SHARE_UI_PLUGIN_INTERFACE_H_ 

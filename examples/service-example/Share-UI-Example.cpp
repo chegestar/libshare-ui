@@ -26,7 +26,7 @@
 
 
  
-#include <shareuiinterface.h>
+#include "shareuiinterface.h"
 #include <QStringList>
 #include <MApplication>
 #include <QDebug>
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     uris << "file://tmp/fake.txt"; 
     
     // Create a interface object
-    ShareUiInterface shareIf;
+    ShareUiInterface shareIf(ShareUiInterface::staticInterfaceName(), "/", QDBusConnection::systemBus(), &app);
     
     // You can check if interface is valid
     if (shareIf.isValid()) {

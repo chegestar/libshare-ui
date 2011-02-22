@@ -4,10 +4,18 @@
 
 TEMPLATE = app
 TARGET = 
+
+INCLUDEPATH += . ../../share-ui/ ../../share-ui-interface
 DEPENDPATH += .
-INCLUDEPATH += .
 
-CONFIG += shareuiinterface-maemo-meegotouch
+CONFIG += shareuiinterface-maemo-meegotouch meegotouch debug qt
 
-# Input
+QMAKE_CXXFLAGS += -Werror -Wall
+LIBS += ../../share-ui-interface/out/libshare-ui-interface.so
+
+OBJECTS_DIR  = ./obj
+MOC_DIR      = ./moc
+QMAKE_CLEAN += obj/* \
+               moc/*
+
 SOURCES += Share-UI-Example.cpp

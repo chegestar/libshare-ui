@@ -1,4 +1,11 @@
 *~
+*.pro.user
+*/moc
+*/obj
+*/out
+*/*/moc
+*/*/obj
+*/*/out
 doc
 Makefile
 libshare-ui/Makefile

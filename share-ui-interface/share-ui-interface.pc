@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/ShareUI
+
+Name: share-ui-interface
+Description: Library and header for ShareUI interface class
+Version: 0.1.0
+Requires: 
+Libs: -L${libdir} -lshare-ui-interface
+Cflags: -I${includedir}

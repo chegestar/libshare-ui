@@ -44,6 +44,8 @@
 #include <MComponentCache>
 #include <QCoreApplication>
 
+#define DBUS_SERVICE_STR "#DBUS_SERVICE"
+
 M_EXPORT int main (int argc, char **argv) {
 
     bool run_standalone = true;
@@ -113,7 +115,7 @@ M_EXPORT int main (int argc, char **argv) {
         new ShareUiInterfaceAdaptor (service);
 
         QDBusConnection connection = QDBusConnection::sessionBus();
-        bool retA = connection.registerService("com.nokia.ShareUi");
+        bool retA = connection.registerService(DBUS_SERVICE_STR);
         bool retB = connection.registerObject("/", service);
         qDebug() << "Setup dbus connection" << retA << retB;
     }

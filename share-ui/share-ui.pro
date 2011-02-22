@@ -1,8 +1,9 @@
-TEMPLATE = app
-CONFIG += qt debug meegotouch link_pkgconfig
-QT += dbus 
+include (../common.pri)
 
-CONFIG += meego-com
+TEMPLATE = app
+CONFIG += qt meegotouch link_pkgconfig
+CONFIG += debug
+QT += dbus 
 
 # profiling
 CONFIG(profiling) {
@@ -24,33 +25,35 @@ INCLUDEPATH += ../share-ui-common \
                ../libsharewidgets/src
 
 CONFIG(meego-com) {
-    system(qdbusxml2cpp -a shareuiinterfaceadaptor com.meego.ShareUiInterface.xml)
-    service.files = com.meego.ShareUi.service
-    DEFINES += MEEGO_COM
+    system(qdbusxml2cpp -a shareuiinterfaceadaptor $${DBUS_INTERFACE}.xml)
 } else {
-# Interim migration path until m-servicefwgen starts using com.meego.ShareUiInterface
-# Need to first copy the interface xml file, because m-servicefwgen currently
-# works only on the current directory. Need to raise bug about this
-    system(cp /usr/share/dbus-1/interfaces/com.nokia.maemo.meegotouch.ShareUiInterface.xml .)
-    system(m-servicefwgen -a com.nokia.maemo.meegotouch.ShareUiInterface)
-    service.files = com.nokia.ShareUi.service
-    QMAKE_CLEAN += com.nokia.maemo.meegotouch.ShareUiInterface.xml
+    # Interim migration path until m-servicefwgen starts using com.meego.ShareUiInterface
+    # Need to first copy the interface xml file, because m-servicefwgen currently
+    # works only on the current directory. Need to raise bug about this
+
+    system(cp /usr/share/dbus-1/interfaces/com.nokia.maemo.meegotouch.ShareUiInterface.xml \
+              $${DBUS_INTERFACE}.xml)
+    system(m-servicefwgen -a $$DBUS_INTERFACE)
+    QMAKE_CLEAN += $${DBUS_INTERFACE}.xml
 }
+
+SOURCES     += shareuiinterfaceadaptor.cpp
+HEADERS     += shareuiinterfaceadaptor.h
+QMAKE_CLEAN += shareuiinterfaceadaptor.h \
+               shareuiinterfaceadaptor.cpp
+
+
 VPATH       += $$DEPENDPATH $$INCLUDEPATH
 
 OBJECTS_DIR  = ./obj
 MOC_DIR      = ./moc
 DESTDIR      = ./out
-QMAKE_CLEAN += obj/* \
-               out/* \
-               moc/*           
+QMAKE_CLEAN += $$OBJECTS_DIR/* \
+               $$MOC_DIR/*     \
+               $$DESTDIR/*
              
 #including the pri file that has the sources list
 include (share-ui-source.pri)
-SOURCES += shareuiinterfaceadaptor.cpp
-
-QMAKE_CLEAN += shareuiinterfaceadaptor.h \
-               shareuiinterfaceadaptor.cpp
 
 INCLUDEPATH += .
 LIBS += ../share-ui-common/out/libshare-ui-common.so
@@ -59,6 +62,7 @@ LIBS += -rdynamic
 INCLUDEPATH += ../mdatauri/MDataURI
 LIBS += ../mdatauri/out/libmdatauri.so
 
+service.files = $${DBUS_SERVICE}.service
 service.path = /usr/share/dbus-1/services
 
 #Install binary application
