@@ -31,7 +31,7 @@
 #include <MApplicationWindow>
 #include <MComponentCache>
 #include <ShareUI/ItemContainer>
-#include <MApplicationPage>
+#include <MSheet>
 #include <QCoreApplication>
 #include <QTimer>
 
@@ -59,7 +59,7 @@ void Service::share (const QStringList &fileList) {
     ShareWidgets::ApplicationViewInterface * iface =
         m_uiLoader.newDefaultApplicationView(pLoader, container);
     
-    MApplicationPage * page = dynamic_cast<MApplicationPage*>(iface);
+    MSheet * page = dynamic_cast<MSheet*>(iface);
 
     
     if (page != 0) {
@@ -82,7 +82,7 @@ void Service::share (const QStringList &fileList) {
 }
 
 void Service::closeWindow() {
-    MApplicationPage * page = qobject_cast <MApplicationPage*> (sender());
+    MSheet * page = qobject_cast <MSheet*> (sender());
 
     if (page != 0) {
         qDebug() << "Close window called by:" << page;
