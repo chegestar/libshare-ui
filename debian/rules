@@ -38,7 +38,7 @@ endif
 config.status: configure
 	dh_testdir
 	# Filter out meego-com for Maemo 6 builds
-	sed -i '/CONFIG += meego-com/d' commmon.pri
+	sed -i '/CONFIG += meego-com/d' common.pri
 	qmake -o Makefile libshare-ui.pro
 
 configure: configure-stamp
