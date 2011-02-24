@@ -35,10 +35,6 @@ UiLoader::~UiLoader () {
     delete d_ptr;
 }
 
-ApplicationViewInterface * newDefaultApplicationView (
-            ShareUI::PluginLoader * pluginLoader,
-            ShareUI::ItemContainer * container);
-
 ApplicationViewInterface * UiLoader::newDefaultApplicationView (
     ShareUI::PluginLoader * pluginLoader, ShareUI::ItemContainer * container) {
     

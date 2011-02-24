@@ -41,10 +41,10 @@ SharedItem DataUriItem::create (const QString & dataUri) {
 }
 
 QList<SharedItem > DataUriItem::createList (const QStringList & dataUris) {
-    QList<QSharedPointer<Item> > list;
+    QList<SharedItem > list;
     
     for (int i = 0; i < dataUris.count(); ++i) {
-        QSharedPointer<Item> item = DataUriItem::create (dataUris.at (i));
+        SharedItem item = DataUriItem::create (dataUris.at (i));
         if (item.isNull() == false) {
             list.append (item);
         }

@@ -30,7 +30,6 @@
 namespace ShareWidgets {
 
     /*!
-      \class ApplicationPageInterface
       \brief Interface definition for functionality all Share UI pages should
              offer.
      */

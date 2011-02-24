@@ -84,9 +84,8 @@ void Service::share (const QStringList &fileList) {
 void Service::closeWindow() {
     MApplicationPage * page = qobject_cast <MApplicationPage*> (sender());
 
-    qDebug() << "Close window called by:" << page;
-
     if (page != 0) {
+        qDebug() << "Close window called by:" << page;
 
         // Disconnect from signals emitted by this page first
         page->disconnect (this);

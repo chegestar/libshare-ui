@@ -140,6 +140,7 @@ void BluetoothMethod::selected (const ShareUI::ItemContainer * items) {
 void BluetoothMethod::currentItems (const ShareUI::ItemContainer * items) {
 #ifdef MEEGO_COM
 // Mark unconditionally Bluetooth invisible for all items as there is no bluetooth UI service implemented yet
+    Q_UNUSED(items);
     Q_EMIT (visible (false));
 #else
     Q_EMIT (visible (acceptContent (items)));
