@@ -28,15 +28,15 @@ SOURCES += shareuiinterface.cpp
 HEADERS += shareuiinterface.h
 
 # Install public headers
-pubheaders.path = /usr/include/ShareUI
+pubheaders.path = $$INSTALL_INC/ShareUI
 pubheaders.files = shareuiinterface.h
 INSTALLS += pubheaders
 
 # Install pkgconfig file for other to use
-pkgconfig.path = /usr/lib/pkgconfig/
+pkgconfig.path = $$INSTALL_LIB/pkgconfig/
 pkgconfig.files = share-ui-interface.pc
 INSTALLS += pkgconfig
 
 # Install library
-target.path = /usr/lib/
+target.path = $$INSTALL_LIB
 INSTALLS += target

@@ -60,15 +60,15 @@ SOURCES += pluginbase.cpp \
            pluginloader.cpp
                 
 # Install binary application
-target.path = /usr/lib
+target.path = $$INSTALL_LIB
 
 # Install public headers
-pubheaders.path = /usr/include/ShareUI
+pubheaders.path = $$INSTALL_INC/ShareUI
 pubheaders.files = ShareUI/*
 INSTALLS += pubheaders
 
 # Install old public headers TODO: REMOVE SOON
-#oldheaders.path = /usr/include/share-ui
+#oldheaders.path = $$INSTALL_INC/share-ui
 #oldheaders.files = inc/*
 #INSTALLS += oldheaders
 
@@ -79,14 +79,14 @@ prf.files = share-ui-common.prf \
 INSTALLS += prf
             
 # Install pkgconfig file for other to use
-pkgconfig.path = /usr/lib/pkgconfig
+pkgconfig.path = $$INSTALL_LIB/pkgconfig
 pkgconfig.files = share-ui-plugin.pc
 INSTALLS += pkgconfig
 
 INSTALLS += target
 
 # API Documentation with Doxygen
-dox.path        = /usr/share/doc/share-ui
+dox.path        = $$INSTALL_DOC/share-ui
 !contains( DEFINES, NO_DOCS ) {
     dox.commands    = doxygen doxygen.cfg
 }

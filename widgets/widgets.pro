@@ -1,3 +1,5 @@
+include(../common.pri)
+
 CONFIG += qt debug link_pkgconfig 
 TEMPLATE = lib
 #PKGCONFIG +=
@@ -38,10 +40,10 @@ QMAKE_CLEAN += obj/* \
 include (widgets-sources.pri)
                 
 # Install binary application
-target.path = /usr/lib
+target.path = $$INSTALL_LIB
 
 # Install public headers
-pubheaders.path = /usr/include/ShareWidgets
+pubheaders.path = $$INSTALL_INC/ShareWidgets
 pubheaders.files = ShareWidgets/*
 INSTALLS += pubheaders
 
@@ -51,7 +53,7 @@ prf.files = share-widgets.prf
 INSTALLS += prf
             
 # Install pkgconfig file for other to use
-pkgconfig.path = /usr/lib/pkgconfig
+pkgconfig.path = $INSTALL_LIB/pkgconfig
 pkgconfig.files = share-widgets.pc
 INSTALLS += pkgconfig
 
