@@ -64,7 +64,9 @@ namespace ShareUI {
     };
 }
 
-#define PLUGIN_INTERFACE "#DBUS_SERVICE" ".pluginInterface/1.0"
+#define PLUGIN_INTERFACE_STR(service) #service ".pluginInterface/1.0"
+#define PLUGIN_INTERFACE_TMP(service) PLUGIN_INTERFACE_STR(service)
+#define PLUGIN_INTERFACE PLUGIN_INTERFACE_TMP(DBUS_SERVICE)
 Q_DECLARE_INTERFACE(ShareUI::PluginInterface, PLUGIN_INTERFACE);
 
 
