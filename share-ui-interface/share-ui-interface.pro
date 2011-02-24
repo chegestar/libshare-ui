@@ -17,7 +17,7 @@ VPATH += $$INCLUDEPATH
 OBJECTS_DIR = ./obj
 MOC_DIR = ./moc
 DESTDIR = ./out
-QMAKE_CLEAN += $$OBJECTS_DIR/* $$MOC_DIR/* $$DESTDIR
+QMAKE_CLEAN += $$OBJECTS_DIR/* $$MOC_DIR/* $$DESTDIR/*
                 
 !exists(shareuiinterface.h) {
     system(qdbusxml2cpp -c ShareUiInterface -p shareuiinterface -N ../share-ui/com.meego.ShareUiInterface.xml)
