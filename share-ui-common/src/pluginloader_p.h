@@ -22,6 +22,7 @@
 #define _PLUGIN_LOADER_PRIVATE_H_
 
 #include "ShareUI/pluginloader.h"
+#include "pluginloaderthread.h"
 #include <QObject>
 #include <QString>
 #include <QPluginLoader>
@@ -146,7 +147,7 @@ namespace ShareUI {
         QList<QRegExp> m_serviceOrder; //!< Order list for web services
         QList<QRegExp> m_otherOrder; //!< Order list for others
 
-        QStringList m_pluginLoadQueue; //!< Plugins not yet loaded
+        PluginLoaderThread *m_loaderThread; //!< Thread for loading plugins
 
         int m_pluginLoadingDelay; //!< Plugin loading delay in milliseconds
 

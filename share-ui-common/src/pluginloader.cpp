@@ -53,6 +53,8 @@
 #define SHARE_UI_PLUGIN_CLEAN_SUFFIX ".so"
 #endif
 
+static const int PLUGIN_LOADER_THREAD_STOP_TIMEOUT = 5000; // ms
+
 using namespace ShareUI;
 
 PluginLoader::PluginLoader(QObject * parent) : QObject (parent),
@@ -70,6 +72,13 @@ PluginLoader::PluginLoader(QObject * parent) : QObject (parent),
 }
 
 PluginLoader::~PluginLoader() {
+
+    if (d_ptr->m_loaderThread != 0) {
+        d_ptr->m_loaderThread->abort();
+        if (!d_ptr->m_loaderThread->wait(PLUGIN_LOADER_THREAD_STOP_TIMEOUT)) {
+            qWarning() << "Plugin loader thread not yet finished, exiting anyway";
+        }
+    }
 
     if (d_ptr->m_loaders.isEmpty() == false) {
         unload();
@@ -134,17 +143,22 @@ bool PluginLoader::loadPlugins () {
     QStringList filters;
     filters << SHARE_UI_PLUGIN_FILTER;
     dir.setNameFilters (filters);
-    d_ptr->m_pluginLoadQueue = dir.entryList (filters, QDir::Files, QDir::Name);
+    QStringList plugins = dir.entryList (filters, QDir::Files, QDir::Name);
+    QStringList pluginsWithPath;
+    foreach (const QString &pluginName, plugins) {
+        pluginsWithPath.append(dir.filePath(pluginName));
+    }
 
-    if (d_ptr->m_pluginLoadQueue.isEmpty()) {
+    if (pluginsWithPath.isEmpty()) {
         qWarning() << "No plugins found";
     }
     else {
         qDebug() << "Starting to load plugins, number of plugins found:" <<
-            d_ptr->m_pluginLoadQueue.size();
+            pluginsWithPath.size();
 
-        // Give some time for the UI to show itself, so that plugin loading
-        // won't disturb the page appearing animation.
+        d_ptr->m_loaderThread =
+            new PluginLoaderThread(pluginsWithPath, thread(), this);
+
         QTimer::singleShot(d_ptr->m_pluginLoadingDelay, d_ptr, SLOT(doLoadPlugins()));
     }
 
@@ -223,7 +237,7 @@ bool PluginLoader::methodOrderingValues (ShareUI::MethodBase * method,
 PluginLoaderPrivate::PluginLoaderPrivate (const QString & pluginDir,
     const QString & confFile, PluginLoader * parent) : QObject (parent),
     m_pluginDir (pluginDir), m_pluginConfig (confFile, QSettings::IniFormat),
-    m_pluginLoadingDelay(0)
+    m_loaderThread(0), m_pluginLoadingDelay(0)
 {
     
     m_promotedPlugins = m_pluginConfig.value (
@@ -234,9 +248,6 @@ PluginLoaderPrivate::PluginLoaderPrivate (const QString & pluginDir,
     
     buildRegExpList (m_pluginConfig.value ("others/order").toStringList(),
         m_otherOrder);
-
-    connect(this, SIGNAL(loadingDone(QPluginLoader*, bool)),
-        this, SLOT(pluginLoaded(QPluginLoader*, bool)), Qt::QueuedConnection);
 
 }
 
@@ -408,8 +419,6 @@ void PluginLoaderPrivate::pluginLoaded(QPluginLoader *loader, bool last) {
 
     if (loader != 0) {
 
-        loader->setParent(this);
-
         QObject * obj = loader->instance();
 
         ShareUI::PluginBase * plugin =
@@ -462,26 +471,8 @@ void PluginLoaderPrivate::pluginLoaded(QPluginLoader *loader, bool last) {
 
 void PluginLoaderPrivate::doLoadPlugins() {
 
-    if (QThread::currentThread() == thread()) {
-        QtConcurrent::run(this, &PluginLoaderPrivate::doLoadPlugins);
-        return;
-    }
+    connect(m_loaderThread, SIGNAL(pluginLoaded(QPluginLoader*, bool)),
+        this, SLOT(pluginLoaded(QPluginLoader*, bool)), Qt::QueuedConnection);
 
-    while (!m_pluginLoadQueue.isEmpty()) {
-        QString pluginName = m_pluginLoadQueue.takeFirst();
-        QPluginLoader * loader = new QPluginLoader ();
-        loader->setFileName (m_pluginDir.filePath(pluginName));
-        loader->setLoadHints (QLibrary::ExportExternalSymbolsHint);
-
-        if (loader->load()) {
-            loader->moveToThread(thread());
-        }
-        else {
-            qCritical() << "Failed to load plugin:" << loader->errorString();
-            delete loader;
-            loader = 0;
-        }
-
-        Q_EMIT(loadingDone(loader, m_pluginLoadQueue.isEmpty()));
-    }
+    m_loaderThread->start();
 }

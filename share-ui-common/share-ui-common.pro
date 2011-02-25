@@ -49,7 +49,8 @@ HEADERS += ShareUI/pluginbase.h \
            ShareUI/pluginloader.h \
            itemcontainer_p.h \
            fileitem_p.h \
-           pluginloader_p.h
+           pluginloader_p.h \
+    src/pluginloaderthread.h
              
 SOURCES += pluginbase.cpp \
            methodbase.cpp \
@@ -57,7 +58,8 @@ SOURCES += pluginbase.cpp \
            itemcontainer.cpp \
            fileitem.cpp \
            datauriitem.cpp \
-           pluginloader.cpp
+           pluginloader.cpp \
+    src/pluginloaderthread.cpp
                 
 # Install binary application
 target.path = /usr/lib
@@ -95,4 +97,3 @@ dox.files       = doc/html/*
 dox.CONFIG     += no_check_exist
 INSTALLS       += dox
 QMAKE_EXTRA_TARGETS += dox
-
