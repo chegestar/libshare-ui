@@ -53,7 +53,7 @@ prf.files = share-widgets.prf
 INSTALLS += prf
             
 # Install pkgconfig file for other to use
-pkgconfig.path = $INSTALL_LIB/pkgconfig
+pkgconfig.path = $$INSTALL_LIB/pkgconfig
 pkgconfig.files = share-widgets.pc
 INSTALLS += pkgconfig
 

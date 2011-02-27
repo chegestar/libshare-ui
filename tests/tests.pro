@@ -54,7 +54,7 @@ QMAKE_CXXFLAGS += -DUNIT_TEST
 
 target.path = $$INSTALL_BIN
 
-sh.path  = $INSTALL_DATA/libshare-ui-tests
+sh.path  = $$INSTALL_DATA/libshare-ui-tests
 sh.files = tests.xml \
            image.jpg \
            tracker-copy.sh \
