@@ -1,8 +1,8 @@
-libshare-ui (0.3.8.3) unstable; urgency=low
+libshare-ui (0.3.9.1) unstable; urgency=low
 
   * Fixes: NB#229870 - Crash in PluginLoaderPrivate::doLoadPlugins
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 24 Feb 2011 17:18:23 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 28 Feb 2011 16:43:23 +0530
 
 libshare-ui (0.3.8.2) unstable; urgency=low
 
