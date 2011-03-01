@@ -1,5 +1,5 @@
 TEMPLATE     = lib
-CONFIG      += qt debug plugin meegotouch link_pkgconfig  qdbus
+CONFIG      += qt debug plugin link_pkgconfig  qdbus
 
 TARGET = defaults
 

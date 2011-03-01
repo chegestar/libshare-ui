@@ -1,5 +1,5 @@
 TEMPLATE     = lib
-CONFIG      += qt debug plugin meegotouch link_pkgconfig share-ui-common
+CONFIG      += qt debug plugin link_pkgconfig share-ui-common
 
 TARGET = example-plugin
 

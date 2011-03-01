@@ -1,4 +1,4 @@
-CONFIG += qt debug meegotouch
+CONFIG += qt debug 
 QT += testlib dbus
 TEMPLATE = app
 

@@ -7,6 +7,6 @@ shareuiplugindir=${libdir}/share-ui/plugins
 Name: share-ui-plugin
 Description: Libraries for ShareUI plugins
 Version: 0.2.0
-Requires: meegotouch mdatauri
+Requires: mdatauri
 Libs: -L${libdir} -lshare-ui-common
 Cflags: -I${includedir}

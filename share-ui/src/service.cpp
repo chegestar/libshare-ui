@@ -1,4 +1,3 @@
- 
 /*
  * This file is part of Handset UX Share user interface
  *
@@ -24,78 +23,50 @@
  */
 
 
-
-
 #include "service.h"
 #include <QDebug>
-#include <MApplicationWindow>
-#include <MComponentCache>
 #include <ShareUI/ItemContainer>
-#include <MApplicationPage>
-#include <QCoreApplication>
+#include <ShareUI/PluginLoader>
+#include <QApplication>
 #include <QTimer>
+#include <ShareWidgets/UiLoader>
 
-Service::Service(QObject *parent) : QObject(parent) {
+Service::Service(QObject *parent) : QObject(parent), 
+    m_uiLoader (new ShareWidgets::UiLoader (this)) {
 }
 
 Service::~Service() {
     qDebug() << "Deleting the service";
 }
 
+QApplication * Service::loadPluginAndGetApp (int argc, char **argv) {
+    
+    ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader (this);
+    if (!m_uiLoader->loadPlugin (pLoader)) {
+        return 0;
+    }
+
+    QApplication * app = m_uiLoader->getApplicationPointer (argc, argv);
+
+    if (pLoader->pluginCount() == 0) {
+        pLoader->setPluginLoadingDelay(100);
+        connect (m_uiLoader, SIGNAL(startLoadingPlugins()), 
+            pLoader, SLOT(loadPlugins()));
+    }
+
+    return app;
+}
+
 void Service::share (const QStringList &fileList) {
-
-    MApplicationWindow * window = MComponentCache::mApplicationWindow();
-
-    qDebug() << "Created window " << window;
 
     ShareUI::ItemContainer * container = new ShareUI::ItemContainer (0, this);
     if (fileList.count() > 0) {
         container->appendItems (fileList);
     }
     
-    ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader ();
-
-        
-    ShareWidgets::ApplicationViewInterface * iface =
-        m_uiLoader.newDefaultApplicationView(pLoader, container);
-    
-    MApplicationPage * page = dynamic_cast<MApplicationPage*>(iface);
-
-    
-    if (page != 0) {
-        connect (page, SIGNAL(shutdown()), this, SLOT(closeWindow()));
-        connect (page, SIGNAL(closeButtonClicked()), this, SLOT(closeWindow()));
-        if (pLoader->pluginCount() == 0) {
-            pLoader->setPluginLoadingDelay(100);
-            connect (page, SIGNAL(appeared()), pLoader, SLOT(loadPlugins()));
-        }
-        page->appear (window);
-        window->show();
-        connect (page, SIGNAL(destroyed()), pLoader, SLOT (deleteLater()));
-
-    } else {
-        delete pLoader;
-        delete window;
-        qCritical() << "Share failed: failed to load UI" << iface << page;
+    if (!m_uiLoader->showUI (container)) {
+        qCritical() << "Share failed: failed to load UI";
         QTimer::singleShot (500, this, SLOT (forceShutdownApp()));
-    }
-}
-
-void Service::closeWindow() {
-    MApplicationPage * page = qobject_cast <MApplicationPage*> (sender());
-
-    if (page != 0) {
-        qDebug() << "Close window called by:" << page;
-
-        // Disconnect from signals emitted by this page first
-        page->disconnect (this);
-        page->deleteLater();        
-
-        MApplicationWindow *activeWindow = page->applicationWindow();
-        if(activeWindow != 0) {
-            activeWindow->close();
-            activeWindow->deleteLater();
-        }
     }
 }
 
@@ -109,3 +80,4 @@ void Service::forceShutdownApp () {
         qCritical() << "Failed to force shutdown application!";
     }
 }
+

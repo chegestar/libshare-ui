@@ -26,6 +26,8 @@
 #include <QGraphicsItem>
 #include <ShareWidgets/ApplicationViewInterface>
 
+class QApplication;
+
 namespace ShareWidgets {
 
     /*!
@@ -38,20 +40,54 @@ namespace ShareWidgets {
     public:
     
         virtual ~UiImplementation()  {}
+
+        /*!
+          \brief Get application pointer. The implementing class creates an
+                 application pointer and returns it - it is upto the calling
+                 function to handle destroying this pointer.
+          \param argc Count of arguments passed
+          \param argv List of arguments passed
+          \return Application pointer
+         */
+        virtual QApplication * getApplicationPointer (int argc, char **argv) = 0;
     
         /*!
-          \brief Interface function to ask for new application view from the
-                 Share UI implementation
-          \param pluginLoader Plugin loader given to page (with plugins already
-                              loaded)
-          \param container Content shared and presented on page
-          \param parent Parent for MApplicationPage
-          \return Pointer to view constructed by plugin
-         */
-        virtual ApplicationViewInterface * newApplicationView (
-            ShareUI::PluginLoader * pluginLoader,
-            ShareUI::ItemContainer * container) = 0;
+          \brief Item container given to page
+          \return Container given to and used by page
+         */        
+        virtual const ShareUI::ItemContainer * itemContainer() const = 0;
         
+        /*!
+          \brief Set item container used in page
+         */
+        virtual void setItemContainer (
+            const ShareUI::ItemContainer * container) = 0; 
+        
+        /*!
+          \brief Tell what pluginLoader to use
+          \param loader Loader to be used
+         */
+        virtual void setPluginLoader (ShareUI::PluginLoader * loader) = 0;
+        
+        virtual ShareUI::PluginLoader * pluginLoader() const = 0;
+        
+        virtual bool showUI () = 0;
+
+    protected:
+        /*! 
+          \brief Signal to be emitted from implementing class when the 
+                 UI has been made visible, and the method plugin loading 
+                 can begin.
+         */
+        virtual void startLoadingPlugins() = 0;
+    
+        /*!
+          \brief Signal to be emitted from implementing class when user action
+                 has been done and Share UI application should destroy window
+                 and shutdown.
+         */
+        virtual void shutdown() = 0;
+    
     };
 }
 

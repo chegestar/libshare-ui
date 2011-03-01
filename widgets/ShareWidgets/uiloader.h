@@ -41,19 +41,38 @@ namespace ShareWidgets {
          */
         UiLoader (QObject * parent = 0);
         virtual ~UiLoader ();
+
+        /*!
+          \brief Set the path for the plugin loader and load the plugin
+          \param pluginLoader Pluginloader with loaded methods
+          \return <code>true</code> if plugin loaded successfully, else
+                  <code>false</code>
+         */
+        bool loadPlugin (ShareUI::PluginLoader * pluginLoader);
+
+        /*!
+          \brief Get the QApplication pointer from the plugin
+          \param argc Count of arguments passed
+          \param argv List of arguments passed
+          \return QApplication pointer
+         */
+        QApplication * getApplicationPointer (int argc, char **argv);
         
         /*!
-          \brief Get application view from the default implementation
-          \param pluginLoader Pluginloader with loaded methods
+          \brief Show the sharing UI
           \param container Container with content to be shared
-          \return Pointer to view if implementation was found and view was
-                  received. Null if implementation was not found or it was
-                  invalid. UiLoader must not be deleted before page received.
+          \return <code>true</code> if the UI presentation succeeded, else
+                  <code>false</code>
          */
-        ApplicationViewInterface * newDefaultApplicationView (
-            ShareUI::PluginLoader * pluginLoader,
-            ShareUI::ItemContainer * container);
+        bool showUI (ShareUI::ItemContainer * container);
                         
+    Q_SIGNALS:
+
+        /*!
+          \brief Signal emitted to say that the method plugin loading can start
+         */
+        void startLoadingPlugins ();
+
     private:
         Q_DISABLE_COPY (UiLoader)
         UiLoaderPrivate * const d_ptr; //!< Private data

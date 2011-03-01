@@ -35,16 +35,13 @@ UiLoader::~UiLoader () {
     delete d_ptr;
 }
 
-ApplicationViewInterface * UiLoader::newDefaultApplicationView (
-    ShareUI::PluginLoader * pluginLoader, ShareUI::ItemContainer * container) {
-    
-    ApplicationViewInterface * retIface = 0;
-        
+bool UiLoader::loadPlugin (ShareUI::PluginLoader * pluginLoader) {
+
     QString pluginPath = "/usr/lib/share-ui/implementations/libdefault.so";
     if (QFile::exists (pluginPath) == false) {
         qCritical() << "Failed to find default implementation for ShareUI:"
             << pluginPath;
-        return 0;
+        return false;
     }
     
     QPluginLoader * loader = new QPluginLoader (this); 
@@ -55,33 +52,55 @@ ApplicationViewInterface * UiLoader::newDefaultApplicationView (
 
     if (loader->load() == true) {
         
-        ShareWidgets::UiImplementationBase * imple = 0;
         QObject * obj = loader->instance();
         
         if (obj != 0) {
             qDebug() << "Received object" << obj;
-            imple = qobject_cast <ShareWidgets::UiImplementationBase*> (obj);
+            d_ptr->m_impl = 
+                qobject_cast <ShareWidgets::UiImplementationBase*> (obj);
+            d_ptr->m_impl->setPluginLoader (pluginLoader);
         } else {
             qWarning() << "Did not receive QObject instance from plugin";
         }
-        
-        if (imple != 0) {
-            retIface = imple->newApplicationView (pluginLoader, container);
-            retIface->setItemContainer (container);
-            retIface->setPluginLoader (pluginLoader);
+
+        if (d_ptr->m_impl != 0) {
+            return true;
         } else {
             qWarning() << "Failed to cast to UiImplementation";
         }
     } else {
         qWarning() << "Failed to load plugin" << loader->errorString();
     }
-    
-    return retIface;
+
+    return false;
 }
+
+QApplication * UiLoader::getApplicationPointer (int argc, char ** argv) {
+    QApplication * app = 0;
+
+    if (d_ptr->m_impl != 0) {
+        app = d_ptr->m_impl->getApplicationPointer (argc, argv);
+    }
+
+    return app;
+}
+
+bool UiLoader::showUI (ShareUI::ItemContainer * container) {
+    if (d_ptr->m_impl != 0) {
+        d_ptr->m_impl->setItemContainer (container);
+        connect (d_ptr->m_impl, SIGNAL (startLoadingPlugins()), this,
+            SIGNAL (startLoadingPlugins()));
+        return d_ptr->m_impl->showUI ();
+    } 
+
+    return false;
+} 
+
 
 // --- private class -----------------------------------------------------------
 
-UiLoaderPrivate::UiLoaderPrivate (UiLoader * parent) : m_uiLoader (parent) {
+UiLoaderPrivate::UiLoaderPrivate (UiLoader * parent) : m_uiLoader (parent),
+    m_impl (0) {
 }
 
 UiLoaderPrivate::~UiLoaderPrivate () {

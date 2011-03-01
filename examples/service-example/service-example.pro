@@ -8,7 +8,7 @@ TARGET =
 INCLUDEPATH += . ../../share-ui/ ../../share-ui-interface
 DEPENDPATH += .
 
-CONFIG += shareuiinterface-maemo-meegotouch meegotouch debug qt
+CONFIG += shareuiinterface-maemo-meegotouch debug qt
 
 QMAKE_CXXFLAGS += -Werror -Wall
 LIBS += ../../share-ui-interface/out/libshare-ui-interface.so

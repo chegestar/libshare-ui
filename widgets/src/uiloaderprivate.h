@@ -23,6 +23,7 @@
 
 namespace ShareWidgets {
     class UiLoader;
+    class UiImplementationBase;
 
     /*!
       \class UiLoaderPrivate
@@ -34,6 +35,7 @@ namespace ShareWidgets {
         virtual ~UiLoaderPrivate ();
         
         UiLoader * m_uiLoader; //!< Public instance
+        UiImplementationBase * m_impl; //!< Pointer to implementation class
     };
 }
 #endif
