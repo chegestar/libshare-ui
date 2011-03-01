@@ -21,5 +21,5 @@ SOURCES += emailmethod.cpp \
            bluetoothmethod.cpp \
            defaultsplugin.cpp
 
-target.path = /usr/lib/share-ui/plugins
+target.path = $$INSTALL_LIB/share-ui/plugins
 INSTALLS += target

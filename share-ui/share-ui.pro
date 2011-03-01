@@ -63,10 +63,10 @@ INCLUDEPATH += ../mdatauri/MDataURI
 LIBS += ../mdatauri/out/libmdatauri.so
 
 service.files = $${DBUS_SERVICE}.service
-service.path = /usr/share/dbus-1/services
+service.path = $$INSTALL_DATA/dbus-1/services
 
 #Install binary application
-target.path = /usr/bin
+target.path = $$INSTALL_BIN
 
 INSTALLS += target        \
             service
