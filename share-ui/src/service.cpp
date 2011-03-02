@@ -41,17 +41,11 @@ Service::~Service() {
 
 QApplication * Service::loadPluginAndGetApp (int argc, char **argv) {
     
-    if (!m_uiLoader->loadPlugin (pLoader)) {
+    if (!m_uiLoader->loadPlugin ()) {
         return 0;
     }
 
     QApplication * app = m_uiLoader->getApplicationPointer (argc, argv);
-
-    if (pLoader->pluginCount() == 0) {
-        pLoader->setPluginLoadingDelay(100);
-        connect (m_uiLoader, SIGNAL(startLoadingPlugins()), 
-            pLoader, SLOT(loadPlugins()));
-    }
 
     return app;
 }
@@ -59,6 +53,11 @@ QApplication * Service::loadPluginAndGetApp (int argc, char **argv) {
 void Service::share (const QStringList &fileList) {
 
     ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader (this);
+    if (pLoader->pluginCount() == 0) {
+        pLoader->setPluginLoadingDelay(100);
+        connect (m_uiLoader, SIGNAL(startLoadingPlugins()), 
+            pLoader, SLOT(loadPlugins()));
+    }
 
     ShareUI::ItemContainer * container = new ShareUI::ItemContainer (0, this);
     if (fileList.count() > 0) {
