@@ -1,3 +1,5 @@
+include(../common.pri)
+
 CONFIG += qt debug meegotouch
 QT += testlib dbus
 TEMPLATE = app

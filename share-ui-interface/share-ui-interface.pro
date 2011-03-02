@@ -19,13 +19,16 @@ MOC_DIR = ./moc
 DESTDIR = ./out
 QMAKE_CLEAN += $$OBJECTS_DIR/* $$MOC_DIR/* $$DESTDIR/*
                 
-!exists(shareuiinterface.h) {
+!exists(shareuiinterface.cpp) {
     system(qdbusxml2cpp -c ShareUiInterface -p shareuiinterface -N ../share-ui/com.meego.ShareUiInterface.xml)
+    system(sed -i \'$ i $${LITERAL_HASH}define SHAREUI_DBUS_SERVICE \"$${DBUS_SERVICE}\"\' shareuiinterface.h)
+    system(mv -f shareuiinterface.h ShareUI/)
 }
-QMAKE_CLEAN += shareuiinterface.h shareuiinterface.cpp
+QMAKE_CLEAN += ShareUI/shareuiinterface.h shareuiinterface.cpp
 
 SOURCES += shareuiinterface.cpp
-HEADERS += shareuiinterface.h
+HEADERS += ShareUI/shareuiinterface.h \
+           ShareUI/ShareUiInterface
 
 # Install public headers
 pubheaders.path = $$INSTALL_INC/ShareUI

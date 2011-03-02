@@ -44,10 +44,6 @@
 #include <MComponentCache>
 #include <QCoreApplication>
 
-#define DBUS_SERVICE_STR(service) #service
-#define DBUS_SERVICE_TMP(service) DBUS_SERVICE_STR(service)
-#define DBUS_SERVICE_NAME DBUS_SERVICE_TMP(DBUS_SERVICE)
-
 M_EXPORT int main (int argc, char **argv) {
 
     bool run_standalone = true;
@@ -61,6 +57,7 @@ M_EXPORT int main (int argc, char **argv) {
     // Use dynamic memory control to make sure free is successfull before we
     // print out bye message.
     MApplication * app = MComponentCache::mApplication (argc, argv);
+    //QDBusConnection::sessionBus().unregisterService(QString("com.nokia.") + argv[0]);
 
     // Load the translation catalog. The engineering english catalog is per
     // application/package, and gets loaded automatically. In the device, there
@@ -117,9 +114,9 @@ M_EXPORT int main (int argc, char **argv) {
         new ShareUiInterfaceAdaptor (service);
 
         QDBusConnection connection = QDBusConnection::sessionBus();
-        bool retA = connection.registerService(DBUS_SERVICE_NAME);
+        bool retA = connection.registerService(DBUS_SERVICE);
         bool retB = connection.registerObject("/", service);
-        qDebug() << "Setup dbus connection" << retA << retB;
+        qDebug() << "Setup dbus connection" << retA << retB << "Service" << DBUS_SERVICE;
     }
     
     int mainRes = app->exec();  
