@@ -35,7 +35,7 @@ UiLoader::~UiLoader () {
     delete d_ptr;
 }
 
-bool UiLoader::loadPlugin (ShareUI::PluginLoader * pluginLoader) {
+bool UiLoader::loadPlugin () {
 
     QString pluginPath = "/usr/lib/share-ui/implementations/libdefault.so";
     if (QFile::exists (pluginPath) == false) {
@@ -58,7 +58,6 @@ bool UiLoader::loadPlugin (ShareUI::PluginLoader * pluginLoader) {
             qDebug() << "Received object" << obj;
             d_ptr->m_impl = 
                 qobject_cast <ShareWidgets::UiImplementationBase*> (obj);
-            d_ptr->m_impl->setPluginLoader (pluginLoader);
         } else {
             qWarning() << "Did not receive QObject instance from plugin";
         }
@@ -85,12 +84,13 @@ QApplication * UiLoader::getApplicationPointer (int argc, char ** argv) {
     return app;
 }
 
-bool UiLoader::showUI (ShareUI::ItemContainer * container) {
+bool UiLoader::showUI (ShareUI::PluginLoader * pluginLoader,
+    ShareUI::ItemContainer * container) {
+
     if (d_ptr->m_impl != 0) {
-        d_ptr->m_impl->setItemContainer (container);
         connect (d_ptr->m_impl, SIGNAL (startLoadingPlugins()), this,
             SIGNAL (startLoadingPlugins()));
-        return d_ptr->m_impl->showUI ();
+        return d_ptr->m_impl->showUI (pluginLoader, container);
     } 
 
     return false;

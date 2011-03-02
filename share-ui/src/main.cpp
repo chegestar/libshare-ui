@@ -36,10 +36,6 @@
 #include <iostream>
 #include <QCoreApplication>
 
-#define DBUS_SERVICE_STR(service) #service
-#define DBUS_SERVICE_TMP(service) DBUS_SERVICE_STR(service)
-#define DBUS_SERVICE_NAME DBUS_SERVICE_TMP(DBUS_SERVICE)
-
 int main (int argc, char **argv) {
 
     bool run_standalone = true;
@@ -104,9 +100,9 @@ int main (int argc, char **argv) {
         new ShareUiInterfaceAdaptor (service);
 
         QDBusConnection connection = QDBusConnection::sessionBus();
-        bool retA = connection.registerService(DBUS_SERVICE_NAME);
+        bool retA = connection.registerService(DBUS_SERVICE);
         bool retB = connection.registerObject("/", service);
-        qDebug() << "Setup dbus connection" << retA << retB;
+        qDebug() << "Setup dbus connection" << retA << retB << "Service" << DBUS_SERVICE;
     }
     
     int mainRes = app->exec();  

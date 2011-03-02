@@ -41,7 +41,6 @@ Service::~Service() {
 
 QApplication * Service::loadPluginAndGetApp (int argc, char **argv) {
     
-    ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader (this);
     if (!m_uiLoader->loadPlugin (pLoader)) {
         return 0;
     }
@@ -59,12 +58,14 @@ QApplication * Service::loadPluginAndGetApp (int argc, char **argv) {
 
 void Service::share (const QStringList &fileList) {
 
+    ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader (this);
+
     ShareUI::ItemContainer * container = new ShareUI::ItemContainer (0, this);
     if (fileList.count() > 0) {
         container->appendItems (fileList);
     }
     
-    if (!m_uiLoader->showUI (container)) {
+    if (!m_uiLoader->showUI (pLoader, container)) {
         qCritical() << "Share failed: failed to load UI";
         QTimer::singleShot (500, this, SLOT (forceShutdownApp()));
     }

@@ -35,7 +35,7 @@
 #include <MTextEdit>
 #include <MApplicationWindow>
 #include <MDataUri>
-#include "shareuiinterface.h"
+#include <ShareUI/ShareUiInterface>
 
 Page::Page (QGraphicsItem *parent) : MApplicationPage (parent) {
     setTitle ("Link Share");
@@ -106,11 +106,13 @@ void Page::shareClicked () {
     qDebug() << "URI:" << items.join (" ");
     
     // Create a interface object
-    ShareUiInterface shareIf(ShareUiInterface::staticInterfaceName(), "/", QDBusConnection::systemBus());
+    qDebug() << "Connecting to service" << SHAREUI_DBUS_SERVICE;
+    ShareUiInterface shareIf(SHAREUI_DBUS_SERVICE, "/", QDBusConnection::sessionBus());
     
     // You can check if interface is valid
     if (shareIf.isValid()) {
         // Start ShareUI application with selected files. 
+        qDebug() << "Signalling share-ui daemon...";
         shareIf.share (items);
     } else {
         qCritical() << "Invalid interface";

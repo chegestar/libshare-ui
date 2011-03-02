@@ -1,4 +1,6 @@
-CONFIG += qt debug 
+include(../common.pri)
+
+CONFIG += qt debug meegotouch
 QT += testlib dbus
 TEMPLATE = app
 
@@ -52,9 +54,9 @@ CONFIG(profiling) {
 # This is needed to get unit test things included
 QMAKE_CXXFLAGS += -DUNIT_TEST
 
-target.path = /usr/bin
+target.path = $$INSTALL_BIN
 
-sh.path  = /usr/share/libshare-ui-tests
+sh.path  = $$INSTALL_DATA/libshare-ui-tests
 sh.files = tests.xml \
            image.jpg \
            tracker-copy.sh \

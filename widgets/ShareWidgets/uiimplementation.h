@@ -52,28 +52,15 @@ namespace ShareWidgets {
         virtual QApplication * getApplicationPointer (int argc, char **argv) = 0;
     
         /*!
-          \brief Item container given to page
-          \return Container given to and used by page
-         */        
-        virtual const ShareUI::ItemContainer * itemContainer() const = 0;
-        
-        /*!
-          \brief Set item container used in page
-         */
-        virtual void setItemContainer (
-            const ShareUI::ItemContainer * container) = 0; 
-        
-        /*!
-          \brief Tell what pluginLoader to use
+          \brief
+          \param container List of items to be shared
           \param loader Loader to be used
          */
-        virtual void setPluginLoader (ShareUI::PluginLoader * loader) = 0;
-        
-        virtual ShareUI::PluginLoader * pluginLoader() const = 0;
-        
-        virtual bool showUI () = 0;
+        virtual bool showUI (ShareUI::PluginLoader * loader,
+            const ShareUI::ItemContainer * container) = 0;
 
     protected:
+
         /*! 
           \brief Signal to be emitted from implementing class when the 
                  UI has been made visible, and the method plugin loading 

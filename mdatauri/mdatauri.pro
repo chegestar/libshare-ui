@@ -1,3 +1,5 @@
+include(../common.pri)
+
 CONFIG += qt debug
 QT -= gui
 TEMPLATE = lib
@@ -37,10 +39,10 @@ HEADERS += mdatauri.h
 SOURCES += mdatauri.cpp
                 
 # Install binary application
-target.path = /usr/lib
+target.path = $$INSTALL_LIB
 
 # Install public headers
-pubheaders.path = /usr/include/MDataUri
+pubheaders.path = $$INSTALL_INC/MDataUri
 pubheaders.files = inc/*
 INSTALLS += pubheaders
 
@@ -50,14 +52,14 @@ prf.files = mdatauri.prf
 INSTALLS += prf
             
 # Install pkgconfig file for other to use
-pkgconfigpc.path = /usr/lib/pkgconfig
+pkgconfigpc.path = $$INSTALL_LIB/pkgconfig
 pkgconfigpc.files = mdatauri.pc
 INSTALLS += pkgconfigpc
 
 INSTALLS += target
 
 # API Documentation with Doxygen
-dox.path        = /usr/share/doc/mdatauri
+dox.path        = $$INSTALL_DOC/mdatauri
 !contains( DEFINES, NO_DOCS ) {
     dox.commands    = doxygen doxygen.cfg
 }

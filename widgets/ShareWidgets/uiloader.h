@@ -44,11 +44,10 @@ namespace ShareWidgets {
 
         /*!
           \brief Set the path for the plugin loader and load the plugin
-          \param pluginLoader Pluginloader with loaded methods
           \return <code>true</code> if plugin loaded successfully, else
                   <code>false</code>
          */
-        bool loadPlugin (ShareUI::PluginLoader * pluginLoader);
+        bool loadPlugin ();
 
         /*!
           \brief Get the QApplication pointer from the plugin
@@ -60,11 +59,13 @@ namespace ShareWidgets {
         
         /*!
           \brief Show the sharing UI
+          \param pluginLoader Pluginloader with loaded methods
           \param container Container with content to be shared
           \return <code>true</code> if the UI presentation succeeded, else
                   <code>false</code>
          */
-        bool showUI (ShareUI::ItemContainer * container);
+        bool showUI (ShareUI::PluginLoader * pluginLoader,
+            ShareUI::ItemContainer * container);
                         
     Q_SIGNALS:
 
