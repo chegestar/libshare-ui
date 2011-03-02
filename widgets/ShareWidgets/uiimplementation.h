@@ -60,23 +60,6 @@ namespace ShareWidgets {
          */
         virtual bool showUI (ShareUI::PluginLoader * loader,
             const ShareUI::ItemContainer * container) = 0;
-
-    protected:
-
-        /*! 
-          \brief Signal to be emitted from implementing class when the 
-                 UI has been made visible, and the method plugin loading 
-                 can begin.
-         */
-        virtual void startLoadingPlugins() = 0;
-    
-        /*!
-          \brief Signal to be emitted from implementing class when user action
-                 has been done and Share UI application should destroy window
-                 and shutdown.
-         */
-        virtual void shutdown() = 0;
-    
     };
 }
 

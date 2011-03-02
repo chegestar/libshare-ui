@@ -33,12 +33,7 @@
 #include <QStringList>
 #include <QList>
 #include <QApplication>
-#include <ShareWidgets/UiImplementation>
-#include <ShareUI/PluginLoader>
-
-namespace ShareWidgets {
-    class UiLoader;
-}
+#include <ShareWidgets/UiLoader>
 
 /*!
     \class Service
@@ -61,7 +56,7 @@ public:
       \param argv List of arguments passed to the application
       \return QApplication pointer
      */
-    QApplication * loadPluginAndGetApp (int argc, char **argv);
+    QApplication * application (int argc, char **argv);
 
 public Q_SLOTS: // METHODS
 
@@ -74,7 +69,7 @@ public Q_SLOTS: // METHODS
     
 private:
 
-    ShareWidgets::UiLoader * m_uiLoader; //!< UI loader
+    ShareWidgets::UiLoader m_uiLoader; //!< UI loader
 };
 
 #endif

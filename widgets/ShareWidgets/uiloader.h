@@ -67,13 +67,6 @@ namespace ShareWidgets {
         bool showUI (ShareUI::PluginLoader * pluginLoader,
             ShareUI::ItemContainer * container);
                         
-    Q_SIGNALS:
-
-        /*!
-          \brief Signal emitted to say that the method plugin loading can start
-         */
-        void startLoadingPlugins ();
-
     private:
         Q_DISABLE_COPY (UiLoader)
         UiLoaderPrivate * const d_ptr; //!< Private data

@@ -57,7 +57,7 @@ int main (int argc, char **argv) {
     }
 
     Service * service = new Service();
-    QApplication * app = service->loadPluginAndGetApp (argc, argv);
+    QApplication * app = service->application (argc, argv);
     if (app == 0) {
         delete service;
         qCritical () << "Could not get QApplication pointer. "

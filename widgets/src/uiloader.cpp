@@ -94,8 +94,6 @@ bool UiLoader::showUI (ShareUI::PluginLoader * pluginLoader,
     ShareUI::ItemContainer * container) {
 
     if (d_ptr->m_impl != 0) {
-        connect (d_ptr->m_impl, SIGNAL (startLoadingPlugins()), this,
-            SIGNAL (startLoadingPlugins()));
         return d_ptr->m_impl->showUI (pluginLoader, container);
     } 
 
