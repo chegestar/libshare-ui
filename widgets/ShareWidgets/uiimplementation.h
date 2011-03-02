@@ -42,17 +42,19 @@ namespace ShareWidgets {
         virtual ~UiImplementation()  {}
 
         /*!
-          \brief Get application pointer. The implementing class creates an
-                 application pointer and returns it - it is upto the calling
-                 function to handle destroying this pointer.
+          \brief Get application pointer. 
+                 The implementing class creates an application pointer and
+                 returns it - it is upto the calling function to handle
+                 destroying this pointer.
           \param argc Count of arguments passed
           \param argv List of arguments passed
-          \return Application pointer
+          \return Application pointer. 
          */
         virtual QApplication * getApplicationPointer (int argc, char **argv) = 0;
     
         /*!
-          \brief
+          \brief The implementing class will implement present the share UI to
+                 the user when this function is called
           \param container List of items to be shared
           \param loader Loader to be used
          */

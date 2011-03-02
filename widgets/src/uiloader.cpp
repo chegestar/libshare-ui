@@ -25,6 +25,12 @@
 #include <QDebug>
 #include <QPluginLoader>
 
+
+#ifndef SHARE_UI_IMPLEMENTATION_LIBRARY
+// .so file providing the implementation of the share-ui 
+#define SHARE_UI_IMPLEMENTATION_LIBRARY "/usr/lib/share-ui/implementations/libdefault.so"
+#endif
+
 using namespace ShareWidgets;
 
 UiLoader::UiLoader (QObject * parent) : QObject (parent),
@@ -37,7 +43,7 @@ UiLoader::~UiLoader () {
 
 bool UiLoader::loadPlugin () {
 
-    QString pluginPath = "/usr/lib/share-ui/implementations/libdefault.so";
+    QString pluginPath = SHARE_UI_IMPLEMENTATION_LIBRARY;
     if (QFile::exists (pluginPath) == false) {
         qCritical() << "Failed to find default implementation for ShareUI:"
             << pluginPath;
