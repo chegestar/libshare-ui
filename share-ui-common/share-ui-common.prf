@@ -3,6 +3,19 @@
 ###################################################################
 
 !contains(DEFINES, BUILD_SHARE_UI_COMMON) {
+    
+    CONFIG(meego-com) {
+        DBUS_ROOT = com.meego
+        DEFINES += MEEGO_COM
+    } else {
+        DBUS_ROOT = com.nokia
+    }
+
+    DBUS_SERVICE   = $${DBUS_ROOT}.ShareUi
+    DBUS_INTERFACE = $${DBUS_ROOT}.ShareUiInterface
+
+    DEFINES += DBUS_SERVICE=\\\"$$DBUS_SERVICE\\\"
+ 
     SHARE_UI_INC_DIR = /usr/include
     SHARE_UI_LIB_DIR = /usr/lib
 

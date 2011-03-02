@@ -15,7 +15,7 @@ QMAKE_CXXFLAGS += -O2 -Werror -Wall
 
 #define descriptions in pluginloader.cpp file
 #TODO: is there better way to do this with qmake?
-DEFINES+="SHARE_UI_PLUGIN_FOLDER=\\\"$$[QT_INSTALL_LIBS]/share-ui/plugins\\\"
+DEFINES+="SHARE_UI_PLUGIN_FOLDER=\\\"$$[QT_INSTALL_LIBS]/share-ui/plugins\\\""
 
 VER_MAJ=0
 VER_MIN=2
@@ -80,9 +80,22 @@ prf.files = share-ui-common.prf \
             share-ui-plugin.prf
 INSTALLS += prf
             
+# Create pkgconfig file
+CONFIG += create_pc create_prl
+QMAKE_PKGCONFIG_REQUIRES = mdatauri
+QMAKE_PKGCONFIG_NAME = share-ui-plugin
+QMAKE_PKGCONFIG_DESCRIPTION = "Libraries for ShareUI plugins"
+QMAKE_PKGCONFIG_LIBDIR = $$INSTALL_LIB
+QMAKE_PKGCONFIG_INCDIR = $$INSTALL_INC
+QMAKE_PKGCONFIG_CFLAGS = -DDBUS_SERVICE=\\\"$$DBUS_SERVICE\\\"
+QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+
 # Install pkgconfig file for other to use
 pkgconfig.path = $$INSTALL_LIB/pkgconfig
-pkgconfig.files = share-ui-plugin.pc
+pkgconfig.target = share-ui-plugin.pc
+pkgconfig.files = out/$$[QMAKE_PKGCONFIG_DESTDIR]/share-ui-common.pc \
+                  share-ui-plugin.pc
+pkgconfig.CONFIG     += no_check_exist
 INSTALLS += pkgconfig
 
 INSTALLS += target

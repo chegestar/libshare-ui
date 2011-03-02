@@ -3,6 +3,8 @@
 ###################################################################
 
 !contains(DEFINES, BUILD_SHARE_WIDGETS) {
+    CONFIG += share-ui-common
+
     SHARE_WIDGETS_INC_DIR = /usr/include
     SHARE_WIDGETS_LIB_DIR = /usr/lib
 

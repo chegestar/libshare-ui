@@ -8,3 +8,4 @@ Description: Share Widgets library
 Version: 0.2.0
 Libs: -L${libdir} -lshare-widgets
 Cflags: -I${includedir}
+Requires: share-ui-common

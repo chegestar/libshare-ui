@@ -3,6 +3,7 @@ usr/include/ShareUI/*
 usr/share/qt4/mkspecs/features/share-ui-plugin.prf
 usr/share/qt4/mkspecs/features/share-ui-common.prf
 usr/lib/pkgconfig/share-ui-plugin.pc
+usr/lib/pkgconfig/share-ui-common.pc
 usr/lib/libshare-widgets.so
 usr/include/ShareWidgets/*
 usr/lib/pkgconfig/share-widgets.pc

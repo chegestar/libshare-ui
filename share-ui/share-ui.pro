@@ -27,9 +27,10 @@ INCLUDEPATH += ../share-ui-common \
 CONFIG(meego-com) {
     system(qdbusxml2cpp -a shareuiinterfaceadaptor $${DBUS_INTERFACE}.xml)
 } else {
-    # Interim migration path until m-servicefwgen starts using com.meego.ShareUiInterface
-    # Need to first copy the interface xml file, because m-servicefwgen currently
-    # works only on the current directory. Need to raise bug about this
+    # Interim migration path until m-servicefwgen starts using
+    # com.meego.ShareUiInterface. Need to first copy the interface xml file,
+    # because m-servicefwgen currently works only on the current directory.
+    # Need to raise bug about this
 
     system(cp /usr/share/dbus-1/interfaces/com.nokia.maemo.meegotouch.ShareUiInterface.xml \
               $${DBUS_INTERFACE}.xml)
