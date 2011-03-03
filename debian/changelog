@@ -1,8 +1,8 @@
 libshare-ui (0.3.9.2) unstable; urgency=low
 
-  * After tagging
+  * Updated prf files to have correct dependencies and macro definitions
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 28 Feb 2011 16:44:37 +0200
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 03 Mar 2011 15:39:58 +0530
 
 libshare-ui (0.3.9.1) unstable; urgency=low
 
