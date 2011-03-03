@@ -34,6 +34,7 @@ OBJECTS_DIR = ./obj
 MOC_DIR = ./moc
 DESTDIR = ./out
 QMAKE_CLEAN += obj/* \
+               out/pkgconfig/* \
                out/* \
                moc/*
 
@@ -88,14 +89,13 @@ QMAKE_PKGCONFIG_DESCRIPTION = "Libraries for ShareUI plugins"
 QMAKE_PKGCONFIG_LIBDIR = $$INSTALL_LIB
 QMAKE_PKGCONFIG_INCDIR = $$INSTALL_INC
 QMAKE_PKGCONFIG_CFLAGS = -DDBUS_SERVICE=\\\"$$DBUS_SERVICE\\\"
-QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 
 # Install pkgconfig file for other to use
 pkgconfig.path = $$INSTALL_LIB/pkgconfig
 pkgconfig.target = share-ui-plugin.pc
-pkgconfig.files = out/$$[QMAKE_PKGCONFIG_DESTDIR]/share-ui-common.pc \
+pkgconfig.files = out/share-ui-common.pc \
                   share-ui-plugin.pc
-pkgconfig.CONFIG     += no_check_exist
+pkgconfig.CONFIG += no_check_exist #Since share-ui-common.pc is generated
 INSTALLS += pkgconfig
 
 INSTALLS += target
