@@ -24,7 +24,6 @@
 #include <ShareUI/PluginLoader>
 #include <ShareUI/ItemContainer>
 #include <QGraphicsItem>
-#include <ShareWidgets/ApplicationViewInterface>
 
 class QApplication;
 

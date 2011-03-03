@@ -39,7 +39,7 @@ Service::~Service() {
 }
 
 QApplication * Service::application (int argc, char **argv) {
-    
+
     if (!m_uiLoader.loadPlugin ()) {
         return 0;
     }
@@ -57,7 +57,7 @@ void Service::share (const QStringList &fileList) {
     if (fileList.count() > 0) {
         container->appendItems (fileList);
     }
-    
+
     if (!m_uiLoader.showUI (pLoader, container)) {
         qCritical() << "Share failed: failed to load UI";
         QTimer::singleShot (500, this, SLOT (forceShutdownApp()));

@@ -25,7 +25,6 @@
 #include <QDebug>
 #include <QPluginLoader>
 
-
 #ifndef SHARE_UI_IMPLEMENTATION_LIBRARY
 // .so file providing the implementation of the share-ui 
 #define SHARE_UI_IMPLEMENTATION_LIBRARY "/usr/lib/share-ui/implementations/libdefault.so"

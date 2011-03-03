@@ -22,7 +22,13 @@
 #define _SHARE_WIDGETS_UI_LOADER_H_
 
 #include <QObject>
-#include <ShareWidgets/ApplicationViewInterface>
+
+class QApplication;
+
+namespace ShareUI {
+    class PluginLoader;
+    class ItemContainer;
+}
 
 namespace ShareWidgets {
 

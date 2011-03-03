@@ -1,6 +1,6 @@
 include(../common.pri)
 
-CONFIG += qt debug link_pkgconfig 
+CONFIG += qt debug link_pkgconfig
 TEMPLATE = lib
 #PKGCONFIG +=
 
