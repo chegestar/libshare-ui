@@ -50,7 +50,8 @@ HEADERS += ShareUI/pluginbase.h \
            itemcontainer_p.h \
            fileitem_p.h \
            pluginloader_p.h \
-    src/pluginloaderthread.h
+    src/pluginloaderthread.h \
+    ShareUI/plugininterface.h
              
 SOURCES += pluginbase.cpp \
            methodbase.cpp \
