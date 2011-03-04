@@ -39,7 +39,6 @@ config.status: configure
 	dh_testdir
 	touch nokia-build
 	qmake -o Makefile libshare-ui.pro
-	rm nokia-build
 
 configure: configure-stamp
 
