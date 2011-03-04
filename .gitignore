@@ -35,3 +35,4 @@ debian/libshare-ui.postinst.debhelper
 debian/libshare-ui
 debian/tmp
 debian/libshare-ui-utils.substvars
+nokia-build

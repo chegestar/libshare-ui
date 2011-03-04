@@ -4,8 +4,10 @@ INSTALL_LIB  = $$INSTALL_ROOT/$$[QT_INSTALL_LIBS]
 INSTALL_DATA = $$INSTALL_ROOT/$$[QT_INSTALL_PREFIX]/share
 INSTALL_DOC  = $$INSTALL_DATA/doc
 
-CONFIG += meego-com
-
+exists(nokia-build) {
+} else {
+    CONFIG += meego-com
+}
 CONFIG(meego-com) {
     DBUS_ROOT = com.meego
     DEFINES += MEEGO_COM
