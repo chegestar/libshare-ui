@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QPluginLoader>
 
+
 #ifndef SHARE_UI_IMPLEMENTATION_LIBRARY
 // .so file providing the implementation of the share-ui 
 #define SHARE_UI_IMPLEMENTATION_LIBRARY "/usr/lib/share-ui/implementations/libdefault.so"
@@ -41,6 +42,11 @@ UiLoader::~UiLoader () {
 }
 
 bool UiLoader::loadPlugin () {
+
+    //Check if already loaded
+    if (d_ptr->m_impl != 0) {
+        return true;
+    }
 
     QString pluginPath = SHARE_UI_IMPLEMENTATION_LIBRARY;
     if (QFile::exists (pluginPath) == false) {
@@ -77,16 +83,6 @@ bool UiLoader::loadPlugin () {
     }
 
     return false;
-}
-
-QApplication * UiLoader::getApplicationPointer (int argc, char ** argv) {
-    QApplication * app = 0;
-
-    if (d_ptr->m_impl != 0) {
-        app = d_ptr->m_impl->getApplicationPointer (argc, argv);
-    }
-
-    return app;
 }
 
 bool UiLoader::showUI (ShareUI::PluginLoader * pluginLoader,

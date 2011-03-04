@@ -31,6 +31,10 @@
 #include <QTimer>
 #include <ShareWidgets/UiLoader>
 
+#ifdef NOKIA_IMPLEMENTATION
+#include <MApplication>
+#endif
+
 Service::Service(QObject *parent) : QObject(parent) {
 }
 
@@ -40,16 +44,21 @@ Service::~Service() {
 
 QApplication * Service::application (int argc, char **argv) {
 
-    if (!m_uiLoader.loadPlugin ()) {
-        return 0;
-    }
-
-    QApplication * app = m_uiLoader.getApplicationPointer (argc, argv);
-
-    return app;
+#ifdef NOKIA_IMPLEMENTATION
+    return new MApplication (argc, argv);
+#else
+    return new QApplication (argc, argv);
+#endif
 }
 
 void Service::share (const QStringList &fileList) {
+
+    // Make sure that implementation is loaded
+    if (m_uiLoader.loadPlugin () == false) {
+        qCritical() << "Can not call share if UI implementation is not loaded.";
+        QTimer::singleShot (500, this, SLOT (forceShutdownApp()));        
+        return;
+    }
 
     ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader (this);
 
@@ -57,7 +66,7 @@ void Service::share (const QStringList &fileList) {
     if (fileList.count() > 0) {
         container->appendItems (fileList);
     }
-
+    
     if (!m_uiLoader.showUI (pLoader, container)) {
         qCritical() << "Share failed: failed to load UI";
         QTimer::singleShot (500, this, SLOT (forceShutdownApp()));

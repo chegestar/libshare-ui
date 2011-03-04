@@ -23,11 +23,9 @@
 
 #include <QObject>
 
-class QApplication;
-
 namespace ShareUI {
-    class PluginLoader;
     class ItemContainer;
+    class PluginLoader;
 }
 
 namespace ShareWidgets {
@@ -54,14 +52,6 @@ namespace ShareWidgets {
                   <code>false</code>
          */
         bool loadPlugin ();
-
-        /*!
-          \brief Get the QApplication pointer from the plugin
-          \param argc Count of arguments passed
-          \param argv List of arguments passed
-          \return QApplication pointer
-         */
-        QApplication * getApplicationPointer (int argc, char **argv);
         
         /*!
           \brief Show the sharing UI
