@@ -38,11 +38,6 @@
 #define SHARE_UI_CONF_PATH "/etc/share-ui.conf"
 #endif
 
-#ifndef SHARE_UI_PLUGIN_FILTER
-// Filter for plugins
-#define SHARE_UI_PLUGIN_FILTER "lib*.so"
-#endif
-
 #ifndef SHARE_UI_PLUGIN_CLEAN_PREFIX
 // Prefix in plugin files that removed to get name of plugin
 #define SHARE_UI_PLUGIN_CLEAN_PREFIX "lib"
@@ -51,6 +46,11 @@
 #ifndef SHARE_UI_PLUGIN_CLEAN_SUFFIX
 // Suffix in plugin files that removed to get name of plugin
 #define SHARE_UI_PLUGIN_CLEAN_SUFFIX ".so"
+#endif
+
+#ifndef SHARE_UI_PLUGIN_FILTER
+// Filter for plugins (e.g. "lib*.so")
+#define SHARE_UI_PLUGIN_FILTER SHARE_UI_PLUGIN_CLEAN_PREFIX "*" SHARE_UI_PLUGIN_CLEAN_SUFFIX
 #endif
 
 static const int PLUGIN_LOADER_THREAD_STOP_TIMEOUT = 5000; // ms
