@@ -37,9 +37,9 @@ endif
 
 config.status: configure
 	dh_testdir
-	# Filter out meego-com for Maemo 6 builds
-	sed -i '/CONFIG += meego-com/d' common.pri
+	touch nokia-build
 	qmake -o Makefile libshare-ui.pro
+	rm nokia-build
 
 configure: configure-stamp
 
