@@ -1,8 +1,9 @@
 libshare-ui (0.3.10.1) unstable; urgency=low
 
   * Fixes: NB#233532 - Compilation errors in /usr/include/ShareUI/plugininterface.h
+  * Fixes: NB#233638 - Supported applications are not listed when image with special characters are shared
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 07 Mar 2011 12:56:21 +0530
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 07 Mar 2011 15:12:58 +0530
 
 libshare-ui (0.3.9.2) unstable; urgency=low
 
