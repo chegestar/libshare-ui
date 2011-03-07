@@ -89,7 +89,8 @@ QMAKE_PKGCONFIG_NAME = share-ui-plugin
 QMAKE_PKGCONFIG_DESCRIPTION = "Libraries for ShareUI plugins"
 QMAKE_PKGCONFIG_LIBDIR = $$INSTALL_LIB
 QMAKE_PKGCONFIG_INCDIR = $$INSTALL_INC
-QMAKE_PKGCONFIG_CFLAGS = -DDBUS_SERVICE=\\\"$$DBUS_SERVICE\\\"
+# We need -DDBUS_SERVICE=\\\"com.nokia.ShareUi\\\" to be generated
+QMAKE_PKGCONFIG_CFLAGS = -DDBUS_SERVICE=\\\\\\\"$$DBUS_SERVICE\\\\\\\"
 
 # Install pkgconfig file for other to use
 pkgconfig.path = $$INSTALL_LIB/pkgconfig
