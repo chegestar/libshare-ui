@@ -1,3 +1,9 @@
+libshare-ui (0.3.10.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 08 Mar 2011 16:18:43 +0530
+
 libshare-ui (0.3.10.1) unstable; urgency=low
 
   * Fixes: NB#233532 - Compilation errors in /usr/include/ShareUI/plugininterface.h
