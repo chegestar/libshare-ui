@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <QCoreApplication>
+#include <QApplication>
 
 int main (int argc, char **argv) {
 
@@ -60,8 +61,7 @@ int main (int argc, char **argv) {
     QApplication * app = service->application (argc, argv);
     if (app == 0) {
         delete service;
-        qCritical () << "Could not get QApplication pointer. "
-            "Exiting share-ui ....";
+        qCritical () << "Could not get QApplication pointer. Force quit";
         return -1;
     }
 
@@ -76,6 +76,7 @@ int main (int argc, char **argv) {
             
             QString input = argv[i];
             
+            //Simple input cleaner
             if (input.startsWith ("data:") == true) {
                 qDebug() << "Received data URI" << input;
                 itemList << input;
@@ -102,11 +103,10 @@ int main (int argc, char **argv) {
         QDBusConnection connection = QDBusConnection::sessionBus();
         bool retA = connection.registerService(DBUS_SERVICE);
         bool retB = connection.registerObject("/", service);
-        qDebug() << "Setup dbus connection" << retA << retB << "Service" << DBUS_SERVICE;
+        qDebug() << "Setup dbus connection" << retA << retB << DBUS_SERVICE;
     }
     
-    int mainRes = app->exec();  
-    qDebug() << "app returned" << mainRes;
+    int mainRes = app->exec();
     
     delete service;
     delete app;

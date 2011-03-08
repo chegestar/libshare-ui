@@ -37,6 +37,16 @@ namespace ShareWidgets {
     public:
     
         virtual ~UiImplementation()  {}
+        
+        /*!
+          \brief Asks for application class needed for implementation (if used
+                 Qt based framework needs something that isn't QApplication)
+          \param argc argument count
+          \param argv argument values
+          \return Pointer to application created by plugin (it will be executed
+                  after this function has returned)
+         */
+        virtual QApplication * application (int argc, char ** argv) = 0;
     
         /*!
           \brief The implementing class will implement present the share UI to

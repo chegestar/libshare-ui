@@ -36,11 +36,6 @@ CONFIG(meego-com) {
               $${DBUS_INTERFACE}.xml)
     system(m-servicefwgen -a $$DBUS_INTERFACE)
     QMAKE_CLEAN += $${DBUS_INTERFACE}.xml
-    
-    #Nokia implementation needs MeegoTouch libraries to initialize MApplication
-    CONFIG += meegotouch
-    
-    DEFINES += NOKIA_IMPLEMENTATION
 }
 
 SOURCES     += shareuiinterfaceadaptor.cpp

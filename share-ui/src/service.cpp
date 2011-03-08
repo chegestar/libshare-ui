@@ -43,22 +43,10 @@ Service::~Service() {
 }
 
 QApplication * Service::application (int argc, char **argv) {
-
-#ifdef NOKIA_IMPLEMENTATION
-    return new MApplication (argc, argv);
-#else
-    return new QApplication (argc, argv);
-#endif
+    return m_uiLoader.loadPlugin (argc, argv);
 }
 
 void Service::share (const QStringList &fileList) {
-
-    // Make sure that implementation is loaded
-    if (m_uiLoader.loadPlugin () == false) {
-        qCritical() << "Can not call share if UI implementation is not loaded.";
-        QTimer::singleShot (500, this, SLOT (forceShutdownApp()));        
-        return;
-    }
 
     ShareUI::PluginLoader *pLoader = new ShareUI::PluginLoader (this);
 

@@ -36,6 +36,7 @@ namespace ShareWidgets {
         
         UiLoader * m_uiLoader; //!< Public instance
         UiImplementationBase * m_impl; //!< Pointer to implementation class
+        QApplication * m_application; //!< Application received from plugin
     };
 }
 #endif

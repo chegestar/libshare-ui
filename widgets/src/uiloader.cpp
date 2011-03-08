@@ -41,18 +41,20 @@ UiLoader::~UiLoader () {
     delete d_ptr;
 }
 
-bool UiLoader::loadPlugin () {
+QApplication * UiLoader::loadPlugin (int argc, char ** argv) {
 
-    //Check if already loaded
-    if (d_ptr->m_impl != 0) {
-        return true;
+    QApplication * ret = 0;
+
+    // Check if already loaded
+    if (d_ptr->m_application != 0) {
+        return d_ptr->m_application;
     }
 
     QString pluginPath = SHARE_UI_IMPLEMENTATION_LIBRARY;
     if (QFile::exists (pluginPath) == false) {
         qCritical() << "Failed to find default implementation for ShareUI:"
             << pluginPath;
-        return false;
+        return 0;
     }
     
     QPluginLoader * loader = new QPluginLoader (this); 
@@ -74,7 +76,14 @@ bool UiLoader::loadPlugin () {
         }
 
         if (d_ptr->m_impl != 0) {
-            return true;
+            d_ptr->m_application = d_ptr->m_impl->application(argc, argv);
+            if (d_ptr->m_application == 0) {
+                qCritical() << "Plugin did not return application";
+                loader->unload();
+                d_ptr->m_impl = 0;
+            } else {
+                ret = d_ptr->m_application;
+            }
         } else {
             qWarning() << "Failed to cast to UiImplementation";
         }
@@ -82,7 +91,7 @@ bool UiLoader::loadPlugin () {
         qWarning() << "Failed to load plugin" << loader->errorString();
     }
 
-    return false;
+    return ret;
 }
 
 bool UiLoader::showUI (ShareUI::PluginLoader * pluginLoader,
@@ -99,7 +108,7 @@ bool UiLoader::showUI (ShareUI::PluginLoader * pluginLoader,
 // --- private class -----------------------------------------------------------
 
 UiLoaderPrivate::UiLoaderPrivate (UiLoader * parent) : m_uiLoader (parent),
-    m_impl (0) {
+    m_impl (0), m_application (0) {
 }
 
 UiLoaderPrivate::~UiLoaderPrivate () {
