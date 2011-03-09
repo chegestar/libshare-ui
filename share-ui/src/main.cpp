@@ -27,10 +27,6 @@
 
 
 #include <QObject>
-#include <MApplication>
-#include <MApplicationWindow>
-#include <MAction>
-#include <MSceneWindow>
 #include "service.h"
 #include "logger.h"
 #include <QFileInfo>
@@ -38,13 +34,10 @@
 #include <QDebug>
 #include <stdlib.h>
 #include <iostream>
-
-#include <MLocale>
-#include <MExport>
-#include <MComponentCache>
 #include <QCoreApplication>
+#include <QApplication>
 
-M_EXPORT int main (int argc, char **argv) {
+int main (int argc, char **argv) {
 
     bool run_standalone = true;
     
@@ -54,21 +47,6 @@ M_EXPORT int main (int argc, char **argv) {
     // Let's use custom logging
     Logger logger;    
 
-    // Use dynamic memory control to make sure free is successfull before we
-    // print out bye message.
-    MApplication * app = MComponentCache::mApplication (argc, argv);
-    //QDBusConnection::sessionBus().unregisterService(QString("com.nokia.") + argv[0]);
-
-    // Load the translation catalog. The engineering english catalog is per
-    // application/package, and gets loaded automatically. In the device, there
-    // will be only one translation catalog for share-ui, webupload-engine and
-    // transfer-ui, and we need to explicitly load it
-    MLocale locale;
-    locale.installTrCatalog ("transfer");
-    MLocale::setDefault (locale);
-
-    Service * service = new Service();
-
     for(int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--service") == 0) {
             run_standalone = false;
@@ -77,6 +55,14 @@ M_EXPORT int main (int argc, char **argv) {
             std::cout << "\tshare-ui <file list>" << std::endl;
             exit(0);
         }
+    }
+
+    Service * service = new Service();
+    QApplication * app = service->application (argc, argv);
+    if (app == 0) {
+        delete service;
+        qCritical () << "Could not get QApplication pointer. Force quit";
+        return -1;
     }
 
     if (run_standalone == true) {
@@ -90,6 +76,7 @@ M_EXPORT int main (int argc, char **argv) {
             
             QString input = argv[i];
             
+            //Simple input cleaner
             if (input.startsWith ("data:") == true) {
                 qDebug() << "Received data URI" << input;
                 itemList << input;
@@ -116,11 +103,10 @@ M_EXPORT int main (int argc, char **argv) {
         QDBusConnection connection = QDBusConnection::sessionBus();
         bool retA = connection.registerService(DBUS_SERVICE);
         bool retB = connection.registerObject("/", service);
-        qDebug() << "Setup dbus connection" << retA << retB << "Service" << DBUS_SERVICE;
+        qDebug() << "Setup dbus connection" << retA << retB << DBUS_SERVICE;
     }
     
-    int mainRes = app->exec();  
-    qDebug() << "app returned" << mainRes;
+    int mainRes = app->exec();
     
     delete service;
     delete app;

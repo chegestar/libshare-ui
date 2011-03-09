@@ -1,6 +1,6 @@
 QT += gui
 TEMPLATE = app
-CONFIG += qt debug meegotouch mdatauri
+CONFIG += qt debug mdatauri
 CONFIG += shareuiinterface-maemo-meegotouch
 
 INCLUDEPATH += . ../../share-ui/ ../../share-ui-interface ../../mdatauri/inc

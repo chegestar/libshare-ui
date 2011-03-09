@@ -1,7 +1,7 @@
 include (../common.pri)
 
 TEMPLATE = app
-CONFIG += qt meegotouch link_pkgconfig
+CONFIG += qt link_pkgconfig
 CONFIG += debug
 QT += dbus 
 

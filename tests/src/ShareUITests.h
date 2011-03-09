@@ -28,7 +28,6 @@
 #define _SHARE_UI_TESTS_H_
 
 #include <QObject>
-#include <MApplication>
 
 class ShareUITests : public QObject {
     Q_OBJECT
