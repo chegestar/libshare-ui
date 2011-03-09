@@ -41,7 +41,7 @@ UiLoader::~UiLoader () {
     delete d_ptr;
 }
 
-QApplication * UiLoader::loadPlugin (int argc, char ** argv) {
+QApplication * UiLoader::loadPlugin (int & argc, char ** argv) {
 
     QApplication * ret = 0;
 

@@ -56,7 +56,7 @@ public:
       \param argv List of arguments passed to the application
       \return QApplication pointer
      */
-    QApplication * application (int argc, char **argv);
+    QApplication * application (int & argc, char **argv);
 
 public Q_SLOTS: // METHODS
 

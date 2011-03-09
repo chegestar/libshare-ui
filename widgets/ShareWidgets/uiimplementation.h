@@ -46,7 +46,7 @@ namespace ShareWidgets {
           \return Pointer to application created by plugin (it will be executed
                   after this function has returned)
          */
-        virtual QApplication * application (int argc, char ** argv) = 0;
+        virtual QApplication * application (int & argc, char ** argv) = 0;
     
         /*!
           \brief The implementing class will implement present the share UI to

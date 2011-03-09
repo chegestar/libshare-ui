@@ -42,7 +42,7 @@ Service::~Service() {
     qDebug() << "Deleting the service";
 }
 
-QApplication * Service::application (int argc, char **argv) {
+QApplication * Service::application (int &argc, char **argv) {
     return m_uiLoader.loadPlugin (argc, argv);
 }
 
