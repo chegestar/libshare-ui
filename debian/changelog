@@ -1,3 +1,9 @@
+libshare-ui (0.3.11.1) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 11 Mar 2011 15:35:24 +0200
+
 libshare-ui (0.3.10.2) unstable; urgency=low
 
   * New core binary without meegotouch dependency
