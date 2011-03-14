@@ -32,10 +32,8 @@
 #include <QObject>
 #include <QStringList>
 #include <QList>
-#include <MApplicationWindow>
-#include <ShareWidgets/UiImplementation>
+#include <QApplication>
 #include <ShareWidgets/UiLoader>
-#include <ShareUI/PluginLoader>
 
 /*!
     \class Service
@@ -50,13 +48,20 @@ public:
     Service(QObject *parent = 0);
     virtual ~Service();
 
-public Q_SLOTS: // METHODS
-    void share(const QStringList &fileList);
     /*!
-        \brief Slot to close all the windows
-    */
-    void closeWindow();
-    
+      \brief Function that loads the plugin providing the actual sharing UI
+             and returns pointer to the QApplication instance for the
+             application
+      \param argc Count of number of arguments passed
+      \param argv List of arguments passed to the application
+      \return QApplication pointer
+     */
+    QApplication * application (int & argc, char **argv);
+
+public Q_SLOTS: // METHODS
+
+    void share(const QStringList &fileList);
+
     /*!
       \brief Slot to used to kill application when started
      */

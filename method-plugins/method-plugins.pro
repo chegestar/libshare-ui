@@ -1,5 +1,7 @@
+include(../common.pri)
+
 TEMPLATE     = lib
-CONFIG      += qt debug plugin meegotouch link_pkgconfig  qdbus
+CONFIG      += qt debug plugin link_pkgconfig  qdbus
 
 TARGET = defaults
 
@@ -27,5 +29,5 @@ DESTDIR = ./out
 #including the pri file that has the sources list
 include (method-plugins-source.pri)
 
-target.path = /usr/lib/share-ui/plugins
+target.path = $$INSTALL_LIB/share-ui/plugins
 INSTALLS += target

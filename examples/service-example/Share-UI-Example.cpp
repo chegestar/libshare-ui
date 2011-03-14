@@ -23,39 +23,72 @@
  * IN THE SOFTWARE. 
  */
 
-
-
  
-#include "shareuiinterface.h"
+#include <ShareUI/ShareUiInterface>
 #include <QStringList>
-#include <MApplication>
 #include <QDebug>
+#include <iostream>
+
 
 int main(int argc, char **argv)
 {
-    MApplication app(argc, argv);
-    
     // Create a QStringlist where file uri will be stored
-    QStringList uris; 
+    QStringList itemList;
     
     // Append the file uris to the list (files need to indexed by Tracker)
     // If application is reading files from Tracker then Tracker's "file ID
     // URIs" should be used instead. These are URIs of files entry in Tracker
     // database. In this example simple file path URI is used to keep code
     // simple.
-    uris << "file://tmp/fake.txt"; 
-    
+
+    bool help = false;
+    for(int i = 1; i < argc; ++i) {
+        const QString arg = argv[i];
+        if (arg == "--help" || arg == "-h") {
+            help = true;
+            break;
+        }
+
+        if(arg.startsWith("-")) {
+            // This is probably some kind of option, like -software.  Ignore.
+            qDebug() << "Ignoring option" << arg;
+            continue;
+        }
+
+        if (arg.startsWith ("data:") == true) {
+            qDebug() << "Share data URI" << arg;
+            itemList << arg;
+        } else {
+            QFileInfo fileInfo (arg);
+            QString fileUri = fileInfo.canonicalFilePath();
+            if (fileUri.isEmpty ()) {
+                qDebug() << "Share Tracker IRI (?)" << arg;
+                itemList << arg;
+            } else {
+                fileUri.prepend("file://");
+                qDebug() << "Share file path uri" << fileUri;
+                itemList << fileUri;
+            }
+        }
+    }
+
+    if (help || itemList.isEmpty()) {
+        std::cout << "Usage: " << argv[0] << " { <data-uri> | <tracker-iri> | <file-uri> }+ "
+                  << std::endl;
+        exit(0);
+    }
+
     // Create a interface object
-    ShareUiInterface shareIf(ShareUiInterface::staticInterfaceName(), "/", QDBusConnection::systemBus(), &app);
+    qDebug() << "Connecting to service" << SHAREUI_DBUS_SERVICE;
+    ShareUiInterface shareIf(SHAREUI_DBUS_SERVICE, "/", QDBusConnection::sessionBus());
     
     // You can check if interface is valid
     if (shareIf.isValid()) {
         // Start ShareUI application with selected files. 
-        shareIf.share (uris);
+        qDebug() << "Signalling share-ui daemon...";
+        shareIf.share (itemList);
     } else {
         qCritical() << "Invalid interface";
         return -1;
     }
-        
-    return app.exec();
 }

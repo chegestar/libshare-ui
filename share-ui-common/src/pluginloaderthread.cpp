@@ -49,7 +49,7 @@ void PluginLoaderThread::run()
             QMutexLocker locker(&m_mutex);
             if (!m_abort) {
                 loader->moveToThread(m_targetThread);
-                loader->setParent(parent());
+                //loader->setParent(parent());
             }
             else {
                 qDebug() << "Plugin loading aborted, exiting loader thread";

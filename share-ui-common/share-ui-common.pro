@@ -15,7 +15,7 @@ QMAKE_CXXFLAGS += -O2 -Werror -Wall
 
 #define descriptions in pluginloader.cpp file
 #TODO: is there better way to do this with qmake?
-DEFINES+="SHARE_UI_PLUGIN_FOLDER=\\\"$$[QT_INSTALL_LIBS]/share-ui/plugins\\\"
+DEFINES+="SHARE_UI_PLUGIN_FOLDER=\\\"$$[QT_INSTALL_LIBS]/share-ui/plugins\\\""
 
 VER_MAJ=0
 VER_MIN=2
@@ -34,6 +34,7 @@ OBJECTS_DIR = ./obj
 MOC_DIR = ./moc
 DESTDIR = ./out
 QMAKE_CLEAN += obj/* \
+               out/pkgconfig/* \
                out/* \
                moc/*
 
@@ -50,7 +51,8 @@ HEADERS += ShareUI/pluginbase.h \
            itemcontainer_p.h \
            fileitem_p.h \
            pluginloader_p.h \
-    src/pluginloaderthread.h
+    src/pluginloaderthread.h \
+    ShareUI/plugininterface.h
              
 SOURCES += pluginbase.cpp \
            methodbase.cpp \
@@ -62,15 +64,15 @@ SOURCES += pluginbase.cpp \
     src/pluginloaderthread.cpp
                 
 # Install binary application
-target.path = /usr/lib
+target.path = $$INSTALL_LIB
 
 # Install public headers
-pubheaders.path = /usr/include/ShareUI
+pubheaders.path = $$INSTALL_INC/ShareUI
 pubheaders.files = ShareUI/*
 INSTALLS += pubheaders
 
 # Install old public headers TODO: REMOVE SOON
-#oldheaders.path = /usr/include/share-ui
+#oldheaders.path = $$INSTALL_INC/share-ui
 #oldheaders.files = inc/*
 #INSTALLS += oldheaders
 
@@ -80,15 +82,28 @@ prf.files = share-ui-common.prf \
             share-ui-plugin.prf
 INSTALLS += prf
             
+# Create pkgconfig file
+CONFIG += create_pc create_prl
+QMAKE_PKGCONFIG_REQUIRES = mdatauri
+QMAKE_PKGCONFIG_NAME = share-ui-plugin
+QMAKE_PKGCONFIG_DESCRIPTION = "Libraries for ShareUI plugins"
+QMAKE_PKGCONFIG_LIBDIR = $$INSTALL_LIB
+QMAKE_PKGCONFIG_INCDIR = $$INSTALL_INC
+# We need -DDBUS_SERVICE=\\\"com.nokia.ShareUi\\\" to be generated
+QMAKE_PKGCONFIG_CFLAGS = -DDBUS_SERVICE=\\\\\\\"$$DBUS_SERVICE\\\\\\\"
+
 # Install pkgconfig file for other to use
-pkgconfig.path = /usr/lib/pkgconfig
-pkgconfig.files = share-ui-plugin.pc
+pkgconfig.path = $$INSTALL_LIB/pkgconfig
+pkgconfig.target = share-ui-plugin.pc
+pkgconfig.files = out/share-ui-common.pc \
+                  share-ui-plugin.pc
+pkgconfig.CONFIG += no_check_exist #Since share-ui-common.pc is generated
 INSTALLS += pkgconfig
 
 INSTALLS += target
 
 # API Documentation with Doxygen
-dox.path        = /usr/share/doc/share-ui
+dox.path        = $$INSTALL_DOC/share-ui
 !contains( DEFINES, NO_DOCS ) {
     dox.commands    = doxygen doxygen.cfg
 }

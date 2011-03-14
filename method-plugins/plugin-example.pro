@@ -1,5 +1,5 @@
 TEMPLATE     = lib
-CONFIG      += qt debug plugin meegotouch link_pkgconfig share-ui-common
+CONFIG      += qt debug plugin link_pkgconfig share-ui-common
 
 TARGET = example-plugin
 
@@ -21,5 +21,5 @@ SOURCES += emailmethod.cpp \
            bluetoothmethod.cpp \
            defaultsplugin.cpp
 
-target.path = /usr/lib/share-ui/plugins
+target.path = $$INSTALL_LIB/share-ui/plugins
 INSTALLS += target

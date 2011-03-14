@@ -1,8 +1,28 @@
-libshare-ui (0.3.9.2) unstable; urgency=low
+libshare-ui (0.3.11.1) unstable; urgency=low
 
   * After tagging
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 28 Feb 2011 16:44:37 +0200
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 11 Mar 2011 15:35:24 +0200
+
+libshare-ui (0.3.10.2) unstable; urgency=low
+
+  * New core binary without meegotouch dependency
+  * Fixes: NB#235379 - Certain video clip cannot be shared from Videos & TV application
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 11 Mar 2011 10:51:43 +0530
+
+libshare-ui (0.3.10.1) unstable; urgency=low
+
+  * Fixes: NB#233532 - Compilation errors in /usr/include/ShareUI/plugininterface.h
+  * Fixes: NB#233638 - Supported applications are not listed when image with special characters are shared
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 07 Mar 2011 15:12:58 +0530
+
+libshare-ui (0.3.9.2) unstable; urgency=low
+
+  * Updated prf files to have correct dependencies and macro definitions
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 03 Mar 2011 15:39:58 +0530
 
 libshare-ui (0.3.9.1) unstable; urgency=low
 

@@ -2,8 +2,8 @@ Source: libshare-ui
 Section: libs
 Priority: optional
 Maintainer: Jukka Tiihonen <jukka.t.tiihonen@nokia.com>
-Build-Depends: debhelper (>= 5.0.0), libmeegotouch-dev (>= 0.20.48),
-    libqt4-dev (>=4.5), doxygen, maemo-meegotouch-interfaces-dev (>= 0.3.20),
+Build-Depends: debhelper (>= 5.0.0), libqt4-dev (>=4.5), doxygen, 
+    maemo-meegotouch-interfaces-dev (>= 0.3.20),
     conbtdialogs-dev, aegis-builder,
     libqtsparql-dev, libqtsparql-tracker-extensions-dev
 Standards-Version: 3.8.0

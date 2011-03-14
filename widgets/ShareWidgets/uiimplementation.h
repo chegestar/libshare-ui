@@ -24,7 +24,6 @@
 #include <ShareUI/PluginLoader>
 #include <ShareUI/ItemContainer>
 #include <QGraphicsItem>
-#include <ShareWidgets/ApplicationViewInterface>
 
 namespace ShareWidgets {
 
@@ -38,20 +37,25 @@ namespace ShareWidgets {
     public:
     
         virtual ~UiImplementation()  {}
+        
+        /*!
+          \brief Asks for application class needed for implementation (if used
+                 Qt based framework needs something that isn't QApplication)
+          \param argc argument count
+          \param argv argument values
+          \return Pointer to application created by plugin (it will be executed
+                  after this function has returned)
+         */
+        virtual QApplication * application (int & argc, char ** argv) = 0;
     
         /*!
-          \brief Interface function to ask for new application view from the
-                 Share UI implementation
-          \param pluginLoader Plugin loader given to page (with plugins already
-                              loaded)
-          \param container Content shared and presented on page
-          \param parent Parent for MApplicationPage
-          \return Pointer to view constructed by plugin
+          \brief The implementing class will implement present the share UI to
+                 the user when this function is called
+          \param container List of items to be shared
+          \param loader Loader to be used
          */
-        virtual ApplicationViewInterface * newApplicationView (
-            ShareUI::PluginLoader * pluginLoader,
-            ShareUI::ItemContainer * container) = 0;
-        
+        virtual bool showUI (ShareUI::PluginLoader * loader,
+            const ShareUI::ItemContainer * container) = 0;
     };
 }
 
