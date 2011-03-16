@@ -41,7 +41,14 @@ namespace ShareWidgets {
         /*!
           \brief Asks for application class needed for implementation (if used
                  Qt based framework needs something that isn't QApplication)
-          \param argc argument count
+          \param argc Reference to the argc passed to the main function -
+                 integer value containing the number of arguments passed to the
+                 application. 
+                 PLEASE NOTE: Always use reference - some implementations of
+                 QCoreApplication store reference to the argc, and if pass by
+                 value is done, then that can result in a crash when argc is
+                 accessed later, since the reference will be to some location
+                 on stack whose value has changed since
           \param argv argument values
           \return Pointer to application created by plugin (it will be executed
                   after this function has returned)

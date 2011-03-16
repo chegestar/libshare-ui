@@ -1,8 +1,8 @@
 libshare-ui (0.3.11.1) unstable; urgency=low
 
-  * After tagging
+  * Split UiLoader::loadPlugin to get the application pointer in a separate function from loading the plugin
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 11 Mar 2011 15:35:24 +0200
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 16 Mar 2011 15:26:01 +0530
 
 libshare-ui (0.3.10.2) unstable; urgency=low
 
