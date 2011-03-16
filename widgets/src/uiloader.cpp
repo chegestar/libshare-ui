@@ -41,57 +41,64 @@ UiLoader::~UiLoader () {
     delete d_ptr;
 }
 
-QApplication * UiLoader::loadPlugin (int & argc, char ** argv) {
+bool UiLoader::loadPlugin (QString pPath) {
 
-    QApplication * ret = 0;
+    bool pluginLoaded = false;
 
-    // Check if already loaded
-    if (d_ptr->m_application != 0) {
-        return d_ptr->m_application;
+    if (d_ptr->m_impl != 0) {
+        // Plugin has already been loaded once.
+        return true;
     }
 
-    QString pluginPath = SHARE_UI_IMPLEMENTATION_LIBRARY;
+    QString pluginPath = pPath;
+    if (pPath.isEmpty()) {
+        pluginPath = SHARE_UI_IMPLEMENTATION_LIBRARY;
+    }
+
     if (QFile::exists (pluginPath) == false) {
         qCritical() << "Failed to find default implementation for ShareUI:"
             << pluginPath;
-        return 0;
-    }
-    
-    QPluginLoader * loader = new QPluginLoader (this); 
-    qDebug() << "Loading UI implementation from" << pluginPath;
-    loader->setFileName (pluginPath);
-    qDebug() << "Set loading hints for UIIloader";
-    loader->setLoadHints (QLibrary::ExportExternalSymbolsHint);
+    } else {
+        QPluginLoader * loader = new QPluginLoader (this); 
+        qDebug() << "Loading UI implementation from" << pluginPath;
+        loader->setFileName (pluginPath);
+        qDebug() << "Set loading hints for UIIloader";
+        loader->setLoadHints (QLibrary::ExportExternalSymbolsHint);
 
-    if (loader->load() == true) {
-        
-        QObject * obj = loader->instance();
-        
-        if (obj != 0) {
-            qDebug() << "Received object" << obj;
-            d_ptr->m_impl = 
-                qobject_cast <ShareWidgets::UiImplementationBase*> (obj);
-        } else {
-            qWarning() << "Did not receive QObject instance from plugin";
-        }
-
-        if (d_ptr->m_impl != 0) {
-            d_ptr->m_application = d_ptr->m_impl->application(argc, argv);
-            if (d_ptr->m_application == 0) {
-                qCritical() << "Plugin did not return application";
-                loader->unload();
-                d_ptr->m_impl = 0;
+        if (loader->load() == true) {
+            
+            QObject * obj = loader->instance();
+            
+            if (obj != 0) {
+                qDebug() << "Received object" << obj;
+                d_ptr->m_impl = 
+                    qobject_cast <ShareWidgets::UiImplementationBase*> (obj);
+                if (d_ptr->m_impl != 0) {
+                    pluginLoaded = true;
+                } else {
+                    qWarning() << "Failed to cast to UiImplementation";
+                }
             } else {
-                ret = d_ptr->m_application;
+                qWarning() << "Did not receive QObject instance from plugin";
             }
         } else {
-            qWarning() << "Failed to cast to UiImplementation";
+            qWarning() << "Failed to load plugin" << loader->errorString();
         }
-    } else {
-        qWarning() << "Failed to load plugin" << loader->errorString();
     }
 
-    return ret;
+    return pluginLoaded;
+}
+
+QApplication * UiLoader::application (int & argc, char ** argv) {
+
+    // Ask for new application if not already loaded
+    if (d_ptr->m_application == 0) {
+        if (d_ptr->m_impl != 0) {
+            d_ptr->m_application = d_ptr->m_impl->application(argc, argv);
+        }
+    }
+
+    return d_ptr->m_application;
 }
 
 bool UiLoader::showUI (ShareUI::PluginLoader * pluginLoader,

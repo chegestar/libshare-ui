@@ -43,7 +43,12 @@ Service::~Service() {
 }
 
 QApplication * Service::application (int &argc, char **argv) {
-    return m_uiLoader.loadPlugin (argc, argv);
+    QApplication * app = 0;
+    if (m_uiLoader.loadPlugin ()) {
+        app =  m_uiLoader.application (argc, argv);
+    } 
+        
+    return app;
 }
 
 void Service::share (const QStringList &fileList) {
