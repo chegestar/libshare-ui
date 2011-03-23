@@ -59,10 +59,14 @@ void Service::share (const QStringList &fileList) {
     if (fileList.count() > 0) {
         container->appendItems (fileList);
     }
+
+    qDebug() << "Created new container" << container;
     
     if (!m_uiLoader.showUI (pLoader, container)) {
-        qCritical() << "Share failed: failed to load UI";
-        QTimer::singleShot (500, this, SLOT (forceShutdownApp()));
+        qCritical() << "Share failed: failed to load UI for items:";
+        for (int i = 0; i < fileList.size (); ++i) {
+            qCritical() << "\t" << fileList.at (i);
+        }
     }
 }
 

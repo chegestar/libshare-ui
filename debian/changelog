@@ -1,8 +1,8 @@
-libshare-ui (0.3.11.2) unstable; urgency=low
+libshare-ui (0.3.12.1) unstable; urgency=low
 
-  * After tagging
+  * Removed the share ui exit if even one share failed. Should not be there now that failure could be due to duplicates
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 17 Mar 2011 13:37:18 +0200
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 23 Mar 2011 12:50:28 +0530
 
 libshare-ui (0.3.11.1) unstable; urgency=low
 
