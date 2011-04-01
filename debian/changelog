@@ -1,3 +1,9 @@
+libshare-ui (0.3.14.1) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 01 Apr 2011 17:01:52 +0300
+
 libshare-ui (0.3.13.1) unstable; urgency=low
 
   * Changed application deletion to be before service deletion.
