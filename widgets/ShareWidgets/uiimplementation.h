@@ -56,13 +56,15 @@ namespace ShareWidgets {
         virtual QApplication * application (int & argc, char ** argv) = 0;
     
         /*!
-          \brief The implementing class will implement present the share UI to
-                 the user when this function is called
+          \brief The implementing class will implement presenting the share UI
+                 to the user when this function is called. The implementing
+                 class should set the ownership of the arguments appropriately,
+                 to ensure that they are deleted when no longer needed
           \param container List of items to be shared
           \param loader Loader to be used
          */
         virtual bool showUI (ShareUI::PluginLoader * loader,
-            const ShareUI::ItemContainer * container) = 0;
+            ShareUI::ItemContainer * container) = 0;
     };
 }
 

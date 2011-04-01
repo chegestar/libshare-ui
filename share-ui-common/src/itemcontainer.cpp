@@ -36,6 +36,7 @@ ItemContainer::ItemContainer (int sizeLimit, QObject * parent) :
 
 
 ItemContainer::~ItemContainer () {
+    qDebug() << "ItemContainer destructor" << this;
     d_ptr->disconnect (this);
     delete d_ptr;
 }
