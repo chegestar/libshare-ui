@@ -108,8 +108,9 @@ int main (int argc, char **argv) {
     
     int mainRes = app->exec();
     
-    delete service;
+    // As application is made by plugin inside service this order of deletion is important.
     delete app;
+    delete service;
     
     qDebug() << "Clean shutdown of Share UI application";
     return mainRes;
