@@ -24,12 +24,12 @@
 
 
 #include "service.h"
-#include <QDebug>
 #include <ShareUI/ItemContainer>
 #include <ShareUI/PluginLoader>
+#include <ShareWidgets/UiLoader>
 #include <QApplication>
 #include <QTimer>
-#include <ShareWidgets/UiLoader>
+#include <QDebug>
 
 #ifdef NOKIA_IMPLEMENTATION
 #include <MApplication>
