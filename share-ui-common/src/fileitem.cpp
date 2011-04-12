@@ -442,7 +442,7 @@ QString FileItemPrivate::mimeIconName () {
     if (mime.startsWith ("image/")) {
         iconId = "icon-m-content-image";
     } else if (mime.startsWith ("video/")) {
-        iconId = "icon-m-content-video";
+        iconId = "icon-m-content-videos";
     } else if (mime.startsWith("application/") || mime.startsWith("text/")) {
         QString suffix = mime.mid (mime.indexOf ("/") + 1);
         if (mime.contains ("pdf") || mime == "acrobat") {
