@@ -45,7 +45,7 @@ int main (int argc, char **argv) {
     QCoreApplication::setOrganizationName (QLatin1String ("MeeGo"));    
     
     // Let's use custom logging
-    Logger logger;    
+    Logger * logger = Logger::newIfEnabled();
 
     for(int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--service") == 0) {
@@ -113,5 +113,11 @@ int main (int argc, char **argv) {
     delete service;
     
     qDebug() << "Clean shutdown of Share UI application";
+    
+    //No logging after this
+    if (logger != 0) {
+        delete logger;
+    }
+    
     return mainRes;
 }

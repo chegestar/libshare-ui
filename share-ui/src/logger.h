@@ -56,7 +56,7 @@ public:
     /*!
       \brief Destructor, closes the log file.
      */
-    ~Logger ();
+    virtual ~Logger ();
 
     /**
      * Enables filtering of so called "crap" that should not be logged. This can be enabled to filter out stuff
@@ -67,6 +67,13 @@ public:
      * @param patterns the patterns to check against.
      **/
     void setFilter (const QStringList & patterns);
+    
+    /*!
+      \brief Will return act as <code>new Logger()</code> if logging should be
+             enabled.
+      \return Pointer to logger or null if logging not enabled.
+     */
+    static Logger * newIfEnabled();
 
 
 private:
