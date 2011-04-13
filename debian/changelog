@@ -1,6 +1,7 @@
 libshare-ui (0.3.15.1) unstable; urgency=low
 
   * Updated default icon name for videos as per v1.15 of specs
+  * Fixes: NB#246173 - share-ui always logs in the users home dir
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 12 Apr 2011 12:23:23 +0530
 
