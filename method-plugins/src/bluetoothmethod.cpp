@@ -43,23 +43,24 @@
 // http://wiki.maemo.org/Documentation/Maemo_5_Developer_Guide/Using_Connectivity_Components/Maemo_Connectivity#Bluetooth_D-Bus_UI_dialogs
 
 /** Conbtdialogs service, resides in system dbus */
-#define CONBTDIALOGS_DBUS_SERVICE		"com.nokia.bt_ui"
+#define CONBTDIALOGS_DBUS_SERVICE       "com.nokia.bt_ui"
 /** Conbtdialogs interface */
-#define CONBTDIALOGS_DBUS_INTERFACE		"com.nokia.bt_ui"
+#define CONBTDIALOGS_DBUS_INTERFACE     "com.nokia.bt_ui"
 /** Conbtdialogs path */
-#define CONBTDIALOGS_DBUS_PATH			"/com/nokia/bt_ui"
+#define CONBTDIALOGS_DBUS_PATH          "/com/nokia/bt_ui"
 /**   Show send file dialog
     Arguments:
-    uris: DBUS_TYPE_ARRAY			Array of strings representing the URIs of the
-						files to send.
-    Returns:   DBUS_TYPE_BOOLEAN		TRUE, if dialog was shown successfully. */
+    uris: DBUS_TYPE_ARRAY   Array of strings representing the URIs of the
+                            files to send.
+    Returns:   DBUS_TYPE_BOOLEAN    TRUE, if dialog was shown successfully. 
+  */
 #define CONBTDIALOGS_SEND_FILE_REQ                "show_send_file_dlg"
 #else
 // For MeeGo.com define imaginary paths now as there is no UI service yet
-#define CONBTDIALOGS_DBUS_SERVICE		"com.meego.bt_ui"
-#define CONBTDIALOGS_DBUS_INTERFACE		"com.meego.bt_ui"
-#define CONBTDIALOGS_DBUS_PATH			"/com/meego/bt_ui"
-#define CONBTDIALOGS_SEND_FILE_REQ		"show_send_file_dlg"
+#define CONBTDIALOGS_DBUS_SERVICE       "com.meego.bt_ui"
+#define CONBTDIALOGS_DBUS_INTERFACE     "com.meego.bt_ui"
+#define CONBTDIALOGS_DBUS_PATH          "/com/meego/bt_ui"
+#define CONBTDIALOGS_SEND_FILE_REQ      "show_send_file_dlg"
 #endif
 
 using namespace ShareUiDefaultMethods;
@@ -124,22 +125,23 @@ void BluetoothMethod::selected (const ShareUI::ItemContainer * items) {
         QDBusMessage res = dbusIf.call (CONBTDIALOGS_SEND_FILE_REQ, uris);
 
         if (res.type() == QDBusMessage::ErrorMessage) {
-    	    qCritical() << "Failed to call bluetooth service";
-    	    emit (selectedFailed (
-        	QLatin1String("Failed to call bluetooth service")));
-	} else {
-    	    // Emit back to SUI that we are done.
-    	    emit (done());        
-	}
+            qCritical() << "Failed to call bluetooth service";
+            Q_EMIT (selectedFailed (
+                QLatin1String("Failed to call bluetooth service")));
+        } else {
+            // Emit back to SUI that we are done.
+            Q_EMIT (done());        
+        }
     } else {
-	emit (selectedFailed (
-		QLatin1String("Bluetooth service does not exist")));
+        Q_EMIT (selectedFailed (
+            QLatin1String("Bluetooth service does not exist")));
     }
 }
 
 void BluetoothMethod::currentItems (const ShareUI::ItemContainer * items) {
 #ifdef MEEGO_COM
-// Mark unconditionally Bluetooth invisible for all items as there is no bluetooth UI service implemented yet
+// Mark unconditionally Bluetooth invisible for all items as there is no
+// bluetooth UI service implemented yet
     Q_UNUSED(items);
     Q_EMIT (visible (false));
 #else
