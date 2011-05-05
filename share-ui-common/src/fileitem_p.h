@@ -61,33 +61,6 @@ namespace ShareUI {
           \return icon name
          */
         QString mimeIconName ();
-
-        /*!
-          \brief Checks whether the mime suffix is for a text file or not
-          \param suffix Suffix of the mime. It is assumed that the prefix is
-                    either application/ or text/ when this is called
-          \return <code>true</code> if this is a text file else
-                    <code>false</code>
-         */
-        static bool isTextMime (const QString & suffix);
-
-        /*!
-          \brief Checks whether the mime suffix is for a presentation or not
-          \param suffix Suffix of the mime. It is assumed that the prefix is
-                    either application/ or text/ when this is called
-          \return <code>true</code> if this is a presentation else
-                    <code>false</code>
-         */
-        static bool isPresentationMime (const QString & suffix);
-
-        /*!
-          \brief Checks whether the mime suffix is for a spreadsheet or not
-          \param suffix Suffix of the mime. It is assumed that the prefix is
-                    either application/ or text/ when this is called
-          \return <code>true</code> if this is a spreadsheet else
-                    <code>false</code>
-         */
-        static bool isSpreadSheetMime (const QString & suffix);
     
         QUrl m_filepathUri; //!< file path
         QUrl m_trackerIri; //!< tracker path

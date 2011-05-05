@@ -23,6 +23,7 @@
 #include <QtSparql>
 #include <QFileInfo>
 #include <QDebug>
+#include <contentinfo.h>
 
 using namespace ShareUI;
 
@@ -435,76 +436,12 @@ void FileItemPrivate::fileChanged(QList<TrackerChangeNotifier::Quad> deletes,
 }
 
 QString FileItemPrivate::mimeIconName () {
+    ContentInfo cinfo = ContentInfo::forMime (m_mime);
 
-    QString mime = m_mime;
-    QString iconId = "icon-m-content-file-unknown";
-
-    if (mime.startsWith ("image/")) {
-        iconId = "icon-m-content-image";
-    } else if (mime.startsWith ("video/")) {
-        iconId = "icon-m-content-videos";
-    } else if (mime.startsWith("application/") || mime.startsWith("text/")) {
-        QString suffix = mime.mid (mime.indexOf ("/") + 1);
-        if (mime.contains ("pdf") || mime == "acrobat") {
-            // Matching mime types:
-            // application/pdf, application/x-pdf, application/acrobat,
-            // applications/vnd.pdf, text/pdf, text/x-pdf
-            iconId = "icon-m-content-pdf";
-        } else if (isTextMime (suffix)) {
-            iconId = "icon-m-content-word";
-        } else if (isPresentationMime (suffix)) {
-            iconId = "icon-m-content-powerpoint";
-        } else if (isSpreadSheetMime (suffix)) {
-            iconId = "icon-m-content-excel";
-        }
+    if (cinfo.isValid () == false) {
+        return QLatin1String ("icon-m-content-file-unknown");
+    } else {
+        return cinfo.typeIcon ();
     }
-
-    return iconId;
 }
 
-bool FileItemPrivate::isTextMime (const QString & suffix) {
-    // Mime types to be handled here:
-    // text/plain
-    // application/txt
-    // application/rtf
-    // application/x-rtf
-    // text/rtf
-    // application/doc
-    // application/msword
-    // application/vnd.msword
-    // application/vnd.ms-word
-    // application/vnd.oasis.opendocument.text
-    // application/x-vnd.oasis.opendocument.text
-    // application/vnd.openxmlformats-officedocument.wordprocessingml.document
-    return (suffix == "plain" || suffix == "txt" || suffix == "doc" ||
-            suffix.contains ("word") || suffix.contains ("text") || 
-            suffix.contains ("rtf"));
-}
-
-
-bool FileItemPrivate::isPresentationMime (const QString & suffix) {
-    // Mime types to be handled here:
-    // application/vnd.oasis.opendocument.presentation
-    // application/x-vnd.oasis.opendocument.presentation
-    // application/vnd.ms-powerpoint
-    // application/mspowerpoint
-    // application/ms-powerpoint
-    // application/powerpoint
-    // application/vnd.openxmlformats-officedocument.presentationml.presentation
-    // application/vnd.openxmlformats-officedocument.presentationml.slideshow
-    return (suffix.contains ("presentation") || 
-            suffix.contains ("powerpoint"));
-}
-
-bool FileItemPrivate::isSpreadSheetMime (const QString & suffix) {
-    // Mime types to be handled here
-    // application/vnd.oasis.opendocument.spreadsheet
-    // application/x-vnd.oasis.opendocument.spreadsheet
-    // application/vnd.ms-excel
-    // application/msexcel
-    // application/x-msexcel
-    // application/vnd.ms-excel
-    // application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-    return (suffix.contains ("excel") || suffix.contains ("spreadsheet"));
-}
-    

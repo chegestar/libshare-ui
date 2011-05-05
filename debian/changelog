@@ -1,8 +1,8 @@
 libshare-ui (0.3.18.1) unstable; urgency=low
 
-  * After tagging
+  * Updated to use contentaction to get mime icons
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 02 May 2011 11:42:48 +0300
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 05 May 2011 15:27:43 +0530
 
 libshare-ui (0.3.17.1) unstable; urgency=low
 

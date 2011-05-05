@@ -3,6 +3,8 @@ include (../common.pri)
 CONFIG += qt debug link_pkgconfig qtsparql qtsparql-tracker-extensions
 TEMPLATE = lib
 
+PKGCONFIG += contentaction-0.1
+
 # profiling
 CONFIG(profiling) {
     message(Building with profiling)
