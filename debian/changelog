@@ -1,3 +1,9 @@
+libshare-ui (0.3.18.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 05 May 2011 14:10:30 +0300
+
 libshare-ui (0.3.18.1) unstable; urgency=low
 
   * Fixes: NB#249685 - Icons for ODF files are wrong in Share UI
