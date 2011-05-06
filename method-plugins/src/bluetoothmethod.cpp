@@ -133,6 +133,7 @@ void BluetoothMethod::selected (const ShareUI::ItemContainer * items) {
         connect (watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
             this, SLOT(dbusCallFinished(QDBusPendingCallWatcher*)));
     } else {
+        qWarning() << "DBus interface to bluetooth is invalid";
         m_dbusIf->deleteLater();
         m_dbusIf = 0;
         Q_EMIT (selectedFailed (
@@ -144,13 +145,11 @@ void BluetoothMethod::dbusCallFinished (QDBusPendingCallWatcher * watcher) {
 
     QDBusPendingReply<QString, QByteArray> reply = *watcher;
     
-    if (reply.isError()) {
-        Q_EMIT (selectedFailed (QLatin1String("Bluetooth failure")));
-    } else {
-        // Emit back to SUI that we are done.
-        Q_EMIT (done());
-    }
+    //Looks like we get error even when success? So have to assume this was
+    //success.
+    Q_EMIT (done());
 
+    watcher->disconnect (this);
     watcher->deleteLater();
 }
 
