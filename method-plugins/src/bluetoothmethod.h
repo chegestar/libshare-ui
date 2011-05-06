@@ -31,6 +31,8 @@
 
 #include <QObject>
 #include <ShareUI/MethodBase>
+#include <QDBusPendingCallWatcher>
+#include <QDBusInterface>
 
 /*!
    \class BluetoothMethod
@@ -80,6 +82,16 @@ private:
       \return true if content is accepted, false if not
      */
     bool acceptContent (const ShareUI::ItemContainer * items);
+    
+    QDBusInterface * m_dbusIf; //!< Dbus interface used, or null if not used yet
+    
+private Q_SLOTS:
+
+    /*!
+      \brief Slot called after async dbus call finish. For signal
+             QDBusPendingCallWatcher::finished
+     */
+    void dbusCallFinished (QDBusPendingCallWatcher * watcher);
 };
 
 #endif

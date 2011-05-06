@@ -30,6 +30,7 @@
 #include <QDebug>
 #include <QDBusInterface>
 #include <QDBusMessage>
+#include <QDBusPendingReply>
 #include <ShareUI/ItemContainer>
 #include <ShareUI/FileItem>
 #include <ShareUI/DataUriItem>
@@ -66,7 +67,7 @@
 using namespace ShareUiDefaultMethods;
 
 BluetoothMethod::BluetoothMethod (QObject * parent) :
-    ShareUI::MethodBase (parent) {
+    ShareUI::MethodBase (parent), m_dbusIf (0) {
 }
 
 BluetoothMethod::~BluetoothMethod () {
@@ -83,10 +84,6 @@ QString BluetoothMethod::icon () {
 }
 
 void BluetoothMethod::selected (const ShareUI::ItemContainer * items) {
-
-    QDBusConnection systemBus = QDBusConnection::systemBus ();
-    QDBusInterface dbusIf (CONBTDIALOGS_DBUS_SERVICE, CONBTDIALOGS_DBUS_PATH,
-        CONBTDIALOGS_DBUS_INTERFACE, systemBus);
         
     QStringList uris;
     
@@ -120,22 +117,41 @@ void BluetoothMethod::selected (const ShareUI::ItemContainer * items) {
             }
         }
     }
+    
+    QDBusConnection systemBus = QDBusConnection::systemBus ();
+    if (m_dbusIf == 0) {
+        m_dbusIf = new QDBusInterface (CONBTDIALOGS_DBUS_SERVICE,
+            CONBTDIALOGS_DBUS_PATH, CONBTDIALOGS_DBUS_INTERFACE, systemBus,
+            this);
+    }
 
-    if (dbusIf.isValid()) {
-        QDBusMessage res = dbusIf.call (CONBTDIALOGS_SEND_FILE_REQ, uris);
-
-        if (res.type() == QDBusMessage::ErrorMessage) {
-            qCritical() << "Failed to call bluetooth service";
-            Q_EMIT (selectedFailed (
-                QLatin1String("Failed to call bluetooth service")));
-        } else {
-            // Emit back to SUI that we are done.
-            Q_EMIT (done());        
-        }
+    if (m_dbusIf->isValid()) {
+        QDBusPendingCall async = m_dbusIf->asyncCall (
+            CONBTDIALOGS_SEND_FILE_REQ, uris);
+        QDBusPendingCallWatcher * watcher = new QDBusPendingCallWatcher (async,
+            this);
+        connect (watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+            this, SLOT(dbusCallFinished(QDBusPendingCallWatcher*)));
     } else {
+        m_dbusIf->deleteLater();
+        m_dbusIf = 0;
         Q_EMIT (selectedFailed (
             QLatin1String("Bluetooth service does not exist")));
     }
+}
+
+void BluetoothMethod::dbusCallFinished (QDBusPendingCallWatcher * watcher) {
+
+    QDBusPendingReply<QString, QByteArray> reply = *watcher;
+    
+    if (reply.isError()) {
+        Q_EMIT (selectedFailed (QLatin1String("Bluetooth failure")));
+    } else {
+        // Emit back to SUI that we are done.
+        Q_EMIT (done());
+    }
+
+    watcher->deleteLater();
 }
 
 void BluetoothMethod::currentItems (const ShareUI::ItemContainer * items) {
