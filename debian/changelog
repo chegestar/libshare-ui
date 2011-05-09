@@ -1,6 +1,6 @@
-libshare-ui (0.3.18.2) unstable; urgency=low
+libshare-ui (0.3.19.1) unstable; urgency=low
 
-  * Change bluetooth method to use async dbus call
+  * Fixes: NB#251010 - Reaction time to open BT sharing dialog is too slow
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 05 May 2011 14:10:30 +0300
 
