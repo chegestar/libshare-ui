@@ -53,7 +53,7 @@ public:
     
     /*!
       \brief See ShareUI::MethodPluginInterface
-      \return Will return methods for email, bluetooth and SMS
+      \return Will return methods for email and bluetooth
      */
     QList <ShareUI::MethodBase *> methods (QObject * parent = 0);
 };

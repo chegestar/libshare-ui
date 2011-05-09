@@ -17,11 +17,13 @@ DEPENDPATH  += ./src \
                
 INCLUDEPATH += ../share-ui-common \
                ../share-ui-common/src \
+               ../share-ui-common/ShareUI \
                ../share-ui/src \
                ../mdatauri/src \
                ../mdatauri/inc \
                ../widgets \
-               ../widgets/src \          
+               ../widgets/src \
+               ../widgets/ShareWidgets \
                ../method-plugins/src
 
 VPATH += $$DEPENDPATH $$INCLUDEPATH
@@ -33,13 +35,19 @@ DESTDIR     = ./out
 HEADERS += ShareUITests.h \
            mdatauri.h \
            bluetoothmethod.h \
-           emailmethod.h
+           emailmethod.h \
+           sharedmethoddata.h \
+           pluginbase.h \
+           defaultsplugin.h
             
 SOURCES += ShareUITests.cpp \
            mdatauri.cpp \
            bluetoothmethod.cpp \
            emailmethod.cpp \
-           methodscommon.cpp      
+           methodscommon.cpp \
+           sharedmethoddata.cpp \
+           pluginbase.cpp \
+           defaultsplugin.cpp
                         
 CONFIG(profiling) {
     message(Building with profiling)

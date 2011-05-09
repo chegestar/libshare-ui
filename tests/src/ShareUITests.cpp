@@ -33,16 +33,20 @@
 #include "bluetoothmethod.h"
 #include "emailmethod.h"
 #include "MDataUri"
+#include "sharedmethoddata.h"
+#include "defaultsplugin.h"
 #include <QtTest/QtTest>
 #include <QDir>
 #include <QFile>
 #include <QDebug>
 #include <unistd.h>
 #include <QGraphicsLinearLayout>
+#include <QSignalSpy>
 
 #define TEST_FILEPATH "/usr/share/libshare-ui-tests/image.jpg"
 
 using namespace ShareUI;
+using namespace ShareWidgets;
 
 void ShareUITests::initTestCase() {
        
@@ -67,57 +71,112 @@ void ShareUITests::testFile() {
     QCOMPARE(fileItem->size(), (quint64)9964);
     QCOMPARE(fileItem->mimeType(), QString("image/jpeg"));
     QVERIFY(fileItem->lastModified().isValid());
+    QCOMPARE(fileItem->title(), QString("libshare-ui-test.jpg"));
+    QCOMPARE(fileItem->description(), QString());
+    QVERIFY(fileItem->icon().contains("icon"));
+    QCOMPARE(fileItem->filePath(), testFilePath);
+    QCOMPARE(fileItem->fileUri(), QString("file://") + testFilePath);
+    QCOMPARE(fileItem->URI(), QUrl(QString("file://") + testFilePath));
+    QVERIFY(!fileItem->trackerIri().isEmpty());
+    QCOMPARE(fileItem->fileTitle(), QString("libshare-ui-test"));
+    QCOMPARE(fileItem->fileDescription(), QString());
+    QCOMPARE(fileItem->duration(), 0);
+    QVERIFY(fileItem->lastModified().isValid() ||
+        fileItem->contentCreated().isValid());
+
+
 }
 
 void ShareUITests::testContainer() {
 
     QVERIFY (QFile::exists (testFilePath));
 
-    ShareUI::ItemContainer cont1;
-    QCOMPARE (cont1.count(), 0);
-    QVERIFY (cont1.hasSpace());
-    
-    /* Has to be rewritten
-    QCOMPARE (cont1.byteSize(), (unsigned long long) 0);
-    
-    QString testFileURI = "file://" + testFilePath;
-    
-    ShareUI::FileContainer smallCont (1);    
-    QVERIFY (smallCont.hasSpace());    
-    QVERIFY (smallCont.addFile (testFileURI));
-    //TODO: Correct size...
-    QCOMPARE (smallCont.size(), 1);
-    QCOMPARE (smallCont.byteSize(), (unsigned long long) 9964);
-    QVERIFY (!smallCont.hasSpace());    
+    {
+        // Container with max 2 items
+        ItemContainer container(2);
+        QCOMPARE(container.isEmpty(), true);
+        QCOMPARE(container.hasSpace(), true);
+        QCOMPARE(container.count(), 0);
+        QCOMPARE(container.itemIterator().hasNext(), false);
+        QCOMPARE(container.waitingItemsCount(), 0);
+        QCOMPARE(container.totalSize(), (quint64)0);
+        QCOMPARE(container.isReady(), true);
 
-    // Let's use same path, should return true even that container is full
-    QVERIFY (smallCont.addFile (testFileURI));
-    //TODO: Correct size...
-    QCOMPARE (smallCont.size(), 1);
-    QCOMPARE (smallCont.byteSize(), (unsigned long long) 9964);
-    QVERIFY (!smallCont.hasSpace());  
+        // Append file item
+        container.appendItem(QString("file://") + testFilePath);
+        QCOMPARE(container.isEmpty(), false);
+        QCOMPARE(container.hasSpace(), true);
+        QCOMPARE(container.count(), 1);
+        SharedItem item1 = container.getItem(0);
+        FileItem *fileItem = FileItem::toFileItem(item1);
+        QVERIFY(fileItem != 0);
+        ItemIterator iterator1 = container.itemIterator();
+        QCOMPARE(iterator1.hasNext(), true);
+        SharedItem item2 = iterator1.next();
+        QCOMPARE(iterator1.hasNext(), false);
+        QCOMPARE(item1, item2);
+        QCOMPARE(container.waitingItemsCount(), 0);
+        QVERIFY(container.totalSize() > 0);
+        QCOMPARE(container.isReady(), true);
 
-    ShareUI::ItemContainer cont;
-    QStringList list;
-    list << testFileURI;
-    cont.appendItems (list);
-    QCOMPARE (cont.count(), 1);
-    */
+        // Append data uri item
+        container.appendItem(
+            "data:text/x-url;title=Hello%20world;description=Foo%20Bar,thisisdata");
+        QCOMPARE(container.isEmpty(), false);
+        QCOMPARE(container.hasSpace(), false);
+        QCOMPARE(container.count(), 2);
+        SharedItem item3 = container.getItem(1);
+        DataUriItem *dataUriItem = DataUriItem::toDataUriItem(item3);
+        QVERIFY(dataUriItem != 0);
+        ItemIterator iterator2 = container.itemIterator();
+        QCOMPARE(iterator2.hasNext(), true);
+        SharedItem item4 = iterator2.next();
+        QCOMPARE(iterator2.hasNext(), true);
+        QVERIFY(item3 != item4);
+        SharedItem item5 = iterator2.next();
+        QCOMPARE(item5, item3);
+        QCOMPARE(iterator2.hasNext(), false);
+        QCOMPARE(container.waitingItemsCount(), 0);
+        QVERIFY(container.totalSize() > 0);
+        QCOMPARE(container.isReady(), true);
+
+    }
+
+    {
+        // Container without size limit
+        ItemContainer container;
+        QCOMPARE(container.isEmpty(), true);
+        QCOMPARE(container.hasSpace(), true);
+        QCOMPARE(container.count(), 0);
+        QCOMPARE(container.itemIterator().hasNext(), false);
+        QCOMPARE(container.waitingItemsCount(), 0);
+        QCOMPARE(container.totalSize(), (quint64)0);
+        QCOMPARE(container.isReady(), true);
+
+        QSignalSpy changedSpy(&container, SIGNAL(changed()));
+
+        // Append data uri item
+        container.appendItem(
+            "data:text/x-url;title=Hello%20world;description=Foo%20Bar,thisisdata");
+        QCOMPARE(container.isEmpty(), false);
+        QCOMPARE(container.hasSpace(), true);
+        QCOMPARE(container.count(), 1);
+
+        QCOMPARE(changedSpy.count(), 1);
+    }
 
 }
 
-#if 0
-// Commenting this test case till bug 171199 is resolved
 void ShareUITests::testLoader() {
     PluginLoader * loader = new PluginLoader (this);
     
     // Has default path
-    QString defPath = loader->getPluginPath ();
+    QString defPath = loader->pluginPath ();
     QVERIFY (!defPath.isEmpty());
     
     // Test path set (without plugins)
     loader->setPluginPath("/tmp");
-    QCOMPARE (loader->getPluginPath(), QString ("/tmp"));
+    QCOMPARE (loader->pluginPath(), QString ("/tmp"));
     
     // Test with no plugin loaded
     QCOMPARE (loader->pluginCount (), 0);
@@ -125,60 +184,82 @@ void ShareUITests::testLoader() {
     QCOMPARE (loader->pluginName (100), QString());    
     QVERIFY (loader->method (0) == 0);
     QVERIFY (loader->method (100) == 0); 
-    
-    QList <ShareUI::MethodBase *> methods = loader->methodsWithType (
-        ShareUI::MethodBase::TYPE_SHARE_TO_SERVICE);
-    QCOMPARE (methods.count(), 0);
-    methods = loader->methodsWithType (ShareUI::MethodBase::TYPE_SHARE_VIA);
-    QCOMPARE (methods.count(), 0);
+    QCOMPARE (loader->methods().count(), 0);
 
     // Now try to load plugins from this path. There should be none loaded.
-    QVERIFY(!loader->loadPlugins ());
-    
-    // Load bluetooth plugin as test plugin (this can be only run after install)
-    loader->setPluginPath (defPath);
     QVERIFY(loader->loadPlugins ());
-    // There should be at least our plugins
-    QVERIFY (loader->pluginCount () >= 2);
-    
-    loader->unload ();     
-    
-    loader->setPluginPath (defPath);
-    QVERIFY(loader->loadPlugins ());
-    // Confirm it does not load the same plugin twice.
-    QVERIFY(!loader->loadPlugins ());
+    QCOMPARE (loader->pluginCount (), 0);
 
     delete loader;
 }
-#endif
 
 void ShareUITests::pluginTests() {
 
     QVERIFY (QFile::exists (testFilePath));
+
+    // Defaults plugin returns two methods (bluetooth and email)
+    DefaultsPlugin defaultsPlugin;
+    QList<ShareUI::MethodBase *> defaultMethods = defaultsPlugin.methods();
+    QCOMPARE(defaultMethods.count(), 2);
+    qDeleteAll(defaultMethods);
+    defaultMethods.clear();
+
     ShareUI::ItemContainer iCont;
+    ShareUI::ItemContainer emptyContainer;
     QString testFileURI = "file://" + testFilePath;
     iCont.appendItem (testFileURI);
     QCOMPARE (iCont.count(), 1);  
 
     EmailMethod * email = new EmailMethod ();
+    QSignalSpy emailSpy(email, SIGNAL(visible(bool)));
     QVERIFY(!(email->title().isEmpty()));
     QString sub = email->subtitle();
     QString ico = email->icon();
     ShareUI::MethodBase::Type type = ShareUI::MethodBase::TYPE_OTHER;
     QVERIFY (email->type() == type);
     QCOMPARE (email->id(), QString("com.meego.email"));
+
+    // Null container emits visible signal with "false"
+    email->currentItems (0);
+    QCOMPARE(emailSpy.count(), 1);
+    QCOMPARE(emailSpy.at(0).at(0).toBool(), false);
+
+    // Empty container emits visible signal with "false"
+    email->currentItems (&emptyContainer);
+    QCOMPARE(emailSpy.count(), 2);
+    QCOMPARE(emailSpy.at(1).at(0).toBool(), false);
     
-    email->currentItems (&iCont);    
+    // Container with valid file item emits visible signal with "true"
+    email->currentItems (&iCont);
+    QCOMPARE(emailSpy.count(), 3);
+    QCOMPARE(emailSpy.at(2).at(0).toBool(), true);
+
     delete email;
     
+
     BluetoothMethod * bluetooth = new BluetoothMethod ();
+    QSignalSpy bluetoothSpy(bluetooth, SIGNAL(visible(bool)));
     QVERIFY(!(bluetooth->title().isEmpty()));
     sub = bluetooth->subtitle();
     ico = bluetooth->icon();
     QVERIFY (bluetooth->type() == type);
     QCOMPARE (bluetooth->id(), QString("com.meego.bluetooth"));
 
+    // Null container emits visible signal with "false"
+    bluetooth->currentItems (0);
+    QCOMPARE(bluetoothSpy.count(), 1);
+    QCOMPARE(bluetoothSpy.at(0).at(0).toBool(), false);
+
+    // Empty container emits visible signal with "false"
+    bluetooth->currentItems (&emptyContainer);
+    QCOMPARE(bluetoothSpy.count(), 2);
+    QCOMPARE(bluetoothSpy.at(1).at(0).toBool(), false);
+
+    // Container with valid file item emits visible signal with "true"
     bluetooth->currentItems (&iCont);
+    QCOMPARE(bluetoothSpy.count(), 3);
+    QCOMPARE(bluetoothSpy.at(2).at(0).toBool(), true);
+
     delete bluetooth;
 }
 
@@ -353,9 +434,6 @@ void ShareUITests::testDataURIEquality()
     QVERIFY(dataUri2 == cmpDataUri3);
 }
 
-/*********
- *
- * Commenting for now
 void ShareUITests::testDataURIFile() {
     MDataUri dataUri;
     dataUri.setMimeType("text/x-vcard");
@@ -371,8 +449,6 @@ void ShareUITests::testDataURIFile() {
     
     QVERIFY (dataUri.writeDataToFile (path));
     QVERIFY (QFile::exists (path));
-    QVERIFY (dataUri.writeDataToFile (path));
-    QVERIFY (QFile::exists (path));
 
     QFile file (path);
     QVERIFY (file.open (QIODevice::ReadOnly));
@@ -383,7 +459,7 @@ void ShareUITests::testDataURIFile() {
     
     // Binary write
     data.clear();
-    for (char i = 0; i != -1; i++) {
+    for (char i = 0; i != 255; i++) {
         data.append (i);
     }
     dataUri.setBinaryData (data);    
@@ -408,13 +484,11 @@ void ShareUITests::testDataURIFile() {
     QVERIFY (QFile::remove(path));
 }
 
-***********/
-
 void ShareUITests::testDataUriItem() {
    
     QStringList inputList;
     inputList << "http://not.valid.com"; //not valid
-    inputList << "data:text/x-url,http%3A%2F%2Fis.valid.com"; //valid
+    inputList << "data:text/x-url;preview=icon-m-content-my,http%3A%2F%2Fis.valid.com"; //valid
     inputList << "uid:23423423-234234-2342344-234"; //not valid
     inputList << "data:text/avalon;title=Hello%20World;description=Foo%20Bar,http%3A%2F%2Fis.valid.com"; //valid
     inputList << ""; //not valid
@@ -434,6 +508,7 @@ void ShareUITests::testDataUriItem() {
     QVERIFY (dItem->description().isEmpty());
     QCOMPARE (dItem->mimeType(), QString("text/x-url"));
     QCOMPARE (dItem->constructInfo(), inputList.at(1));
+    QCOMPARE (dItem->icon(), QString("icon-m-content-my"));
 
     dItem = ShareUI::DataUriItem::toDataUriItem (items.at (1));
     QVERIFY (dItem != 0);
@@ -441,8 +516,38 @@ void ShareUITests::testDataUriItem() {
     QCOMPARE (dItem->description(), QString("Foo Bar"));  
     QCOMPARE (dItem->mimeType(), QString("text/avalon"));
     QCOMPARE (dItem->constructInfo(), inputList.at(3));
+    QVERIFY (dItem->icon().contains("icon"));
     
-    //TODO: icon test
+}
+
+void ShareUITests::testSharedMethodData() {
+    SharedMethodData *data = SharedMethodData::instance();
+
+    QVERIFY(data != 0);
+    ApplicationViewInterface *view1 = (ApplicationViewInterface*)1;
+    ApplicationViewInterface *view2 = (ApplicationViewInterface*)2;
+    MethodBase *method1 = (MethodBase*)3;
+    MethodBase *method2 = (MethodBase*)4;
+
+    QCOMPARE(data->applicationView(method1), (ApplicationViewInterface*)0);
+    QCOMPARE(data->applicationView(method2), (ApplicationViewInterface*)0);
+
+    data->registerMethod(method1, view1);
+    QCOMPARE(data->applicationView(method1), view1);
+    QCOMPARE(data->applicationView(method2), (ApplicationViewInterface*)0);
+
+    data->registerMethod(method2, view2);
+    QCOMPARE(data->applicationView(method1), view1);
+    QCOMPARE(data->applicationView(method2), view2);
+
+    data->unregisterMethod(method1);
+    QCOMPARE(data->applicationView(method1), (ApplicationViewInterface*)0);
+    QCOMPARE(data->applicationView(method2), view2);
+
+    data->unregisterMethod(method2);
+    QCOMPARE(data->applicationView(method1), (ApplicationViewInterface*)0);
+    QCOMPARE(data->applicationView(method2), (ApplicationViewInterface*)0);
+
 }
 
 QTEST_MAIN(ShareUITests)

@@ -41,9 +41,8 @@ class ShareUITests : public QObject {
 		void testFile();
 		void testContainer();
 		
-        // Commenting this test case till bug 171199 is resolved
 		// Test plugin loader
-		// void testLoader();
+        void testLoader();
 		
         // Test email/bluetooth plugins
         void pluginTests();
@@ -55,10 +54,9 @@ class ShareUITests : public QObject {
         void testValidDataURI();
         void testDataUriItem();
 		void testDataURIEquality();
-		/*
-         * Commenting for now
-         * void testDataURIFile();
-         */
+        void testDataURIFile();
+
+        void testSharedMethodData();
 		
 	private:
 	    

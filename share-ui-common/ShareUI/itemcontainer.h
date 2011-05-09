@@ -59,10 +59,11 @@ namespace ShareUI {
         virtual ~ItemContainer ();
         
         /*!
-          \brief Append item to container
-          \param trackerIri IRI of item in tracker
+          \brief Generate an item from the given construction information and
+                 then append the created item to the container
+          \param constructInfo Construct information for item
          */
-        void appendItem (const QString & trackerIri);
+        void appendItem (const QString & constructInfo);
         
         /*!
           \brief If container is empty

@@ -14,14 +14,10 @@
         <description>Test the ShareUI::FileContainer class</description>
         <step>sh /usr/share/libshare-ui-tests/run-test.sh testContainer</step>
       </case>
-      <!---
-      Commenting this test because the geoEngine library is causing problems
-      currently with this test case
       <case name="testLoader" type="Functional" level="Component">
         <description>Test the PluginLoader class</description>
         <step>sh /usr/share/libshare-ui-tests/run-test.sh testLoader</step>
       </case>
-      -->
       <case name="pluginTests" type="Functional" level="Component">
         <description>Test the provided plugins</description>
         <step>sh /usr/share/libshare-ui-tests/run-test.sh pluginTests</step>
@@ -34,11 +30,17 @@
         <step>/usr/bin/libshare-ui-tests testDataURIData</step>
         <step>/usr/bin/libshare-ui-tests testDataURIMimeType</step>
         <step>/usr/bin/libshare-ui-tests testValidDataURI</step>
-        <step>/usr/bin/libshare-ui-tests testDataURIEquality</step>                  
+        <step>/usr/bin/libshare-ui-tests testDataURIEquality</step>
+        <step>/usr/bin/libshare-ui-tests testDataURIFile</step>
       </case>
       
       <case name="dataUriItemTests" type="Functional" level="Component">
         <step>/usr/bin/libshare-ui-tests testDataUriItem</step>
+      </case>
+
+      <case name="testSharedMethodData" type="Functional" level="Component">
+        <description>Test SharedMethodData class</description>
+        <step>/usr/bin/libshare-ui-tests testSharedMethodData</step>
       </case>
       
       <environments>
