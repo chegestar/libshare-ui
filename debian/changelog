@@ -1,3 +1,9 @@
+libshare-ui (0.3.19.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 09 May 2011 10:53:32 +0300
+
 libshare-ui (0.3.19.1) unstable; urgency=low
 
   * Fixes: NB#251010 - Reaction time to open BT sharing dialog is too slow
