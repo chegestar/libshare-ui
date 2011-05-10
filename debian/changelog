@@ -1,3 +1,9 @@
+libshare-ui (0.3.19.3) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 10 May 2011 09:59:41 +0530
+
 libshare-ui (0.3.19.2) unstable; urgency=low
 
   * Fixes: NB#252639 - Very low code coverage for libshare-ui package
