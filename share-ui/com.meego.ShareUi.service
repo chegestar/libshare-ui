@@ -1,4 +1,4 @@
 [D-BUS Service]
 Interface=com.meego.ShareUiInterface
 Name=com.meego.ShareUi
-Exec=/usr/bin/share-ui --service
+Exec=/usr/bin/invoker --single-instance --wait-term --splash-landscape=/usr/share/themes/blanco/meegotouch/images/splash/meegotouch-sharing-splash-landscape.jpg --splash=/usr/share/themes/blanco/meegotouch/images/splash/meegotouch-sharing-splash.jpg --type=e /usr/bin/share-ui --service
