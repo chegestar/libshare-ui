@@ -1,6 +1,6 @@
 libshare-ui (0.3.20.2) unstable; urgency=low
 
-  * New version after tagging
+  * Use invoker only in nokia version of service file
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 18 May 2011 16:23:30 +0530
 
