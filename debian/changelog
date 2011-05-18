@@ -1,3 +1,9 @@
+libshare-ui (0.3.20.2) unstable; urgency=low
+
+  * New version after tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 18 May 2011 16:23:30 +0530
+
 libshare-ui (0.3.20.1) unstable; urgency=low
 
   * Invoker based splash screen used when launched over dbus
