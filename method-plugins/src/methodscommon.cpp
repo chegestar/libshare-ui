@@ -32,7 +32,8 @@
 
 QString ShareUiDefaultMethods::makeFilePathForVCard (const MDataUri & duri) {
     QString filename = duri.attribute (QLatin1String ("title"));
-    filename.remove (QDir::separator());               
+    filename.remove ('/');
+    filename.remove ('\\');
     if (filename.isEmpty() == true) {
         filename = QLatin1String ("email");
     }

@@ -1,8 +1,8 @@
 libshare-ui (0.3.20.3) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#249654 - Bluetooth is not launched from Shareui main view when try to Share a contact card with symbol \
 
- -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 18 May 2011 16:28:31 +0300
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 19 May 2011 15:25:13 +0530
 
 libshare-ui (0.3.20.2) unstable; urgency=low
 

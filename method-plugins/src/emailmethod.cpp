@@ -32,7 +32,6 @@
 #include <ShareUI/ItemContainer>
 #include <ShareUI/DataUriItem>
 #include <ShareUI/FileItem>
-#include <QDir>
 #include "methodscommon.h"
 
 using namespace ShareUiDefaultMethods;
