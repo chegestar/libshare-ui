@@ -1,3 +1,9 @@
+libshare-ui (0.3.21.1) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 23 May 2011 15:57:36 +0300
+
 libshare-ui (0.3.20.4) unstable; urgency=low
 
   * Clean up source headers
