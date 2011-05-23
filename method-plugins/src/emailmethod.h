@@ -3,7 +3,7 @@
  * This file is part of Handset UX Share user interface
  *
  * Copyright (C) 2010-2011 Nokia Corporation and/or its subsidiary(-ies). All rights reserved.
- * Contact: Jukka Tiihonen <jukka.tiihonen@nokia.com>
+ * Contact: Jukka Tiihonen <jukka.t.tiihonen@nokia.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to 

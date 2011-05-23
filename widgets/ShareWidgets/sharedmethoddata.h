@@ -2,7 +2,7 @@
 /*
  * share-ui -- Handset UX Share user interface
  * Copyright (c) 2010-2011 Nokia Corporation and/or its subsidiary(-ies).
- * Contact: Jukka Tiihonen <jukka.tiihonen@nokia.com>
+ * Contact: Jukka Tiihonen <jukka.t.tiihonen@nokia.com>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU Lesser General Public License,
