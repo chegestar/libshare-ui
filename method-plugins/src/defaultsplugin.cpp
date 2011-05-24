@@ -42,8 +42,12 @@ QList<ShareUI::MethodBase *> DefaultsPlugin::methods (QObject * parent) {
 
     QList<ShareUI::MethodBase *> list;
     
-    list.append (new BluetoothMethod(parent));
+    //email only used on meego side, bluetooth only on nokia side
+#ifdef MEEGO_COM
     list.append (new EmailMethod(parent));
+#else    
+    list.append (new BluetoothMethod(parent));
+#endif
     
     return list;
 }
