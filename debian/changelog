@@ -1,3 +1,9 @@
+libshare-ui (0.3.21.3) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 25 May 2011 17:04:32 +0300
+
 libshare-ui (0.3.21.2) unstable; urgency=low
 
   * Unit test fix
