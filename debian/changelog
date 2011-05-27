@@ -1,6 +1,6 @@
 libshare-ui (0.3.21.3) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#259684 - ShareUI crash when account is created and there are multiple share-uis
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 25 May 2011 17:04:32 +0300
 

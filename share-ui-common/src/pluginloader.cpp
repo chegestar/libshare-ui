@@ -366,6 +366,25 @@ QString PluginLoaderPrivate::loaderToName (QPluginLoader * loader) {
 void PluginLoaderPrivate::newMethodFromPlugin (ShareUI::MethodBase * method) {
     ShareUI::PluginBase * plugin = qobject_cast <ShareUI::PluginBase*>(
         sender());
+
+    if (method->parent() != 0) {
+        bool newMethodFound = false;
+        QObjectList methodChildren = method->children();
+        for (int i = 0; i < methodChildren.count(); i++) {
+            ShareUI::MethodBase *newMethod =
+                qobject_cast<ShareUI::MethodBase*>(methodChildren[i]);
+            if (newMethod != 0) {
+                method = newMethod;
+                newMethodFound = true;
+                break;
+            }
+        }
+
+        if (!newMethodFound) {
+            qWarning() << "Ignoring a new method that is already owned by someone else";
+            return;
+        }
+    }
     
     if (plugin != 0) {
         m_methodPluginMap.insert (method, plugin);
