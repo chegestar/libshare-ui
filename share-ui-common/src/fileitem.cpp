@@ -95,6 +95,7 @@ QList<QSharedPointer<Item> > FileItem::createList (
             isTrackerIri = false;
         
         } else if (constructInfoList [i].startsWith ("file://") == true) {
+            fUrl = FileItemPrivate::unencodedUrl(fUrl);
             isTrackerIri = false;
             
         } else if (constructInfoList [i].startsWith ("urn:") == false) {
