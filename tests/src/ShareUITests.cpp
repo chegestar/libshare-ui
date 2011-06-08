@@ -200,8 +200,8 @@ void ShareUITests::pluginTests() {
     // Defaults plugin returns two methods (bluetooth and email)
     DefaultsPlugin defaultsPlugin;
     QList<ShareUI::MethodBase *> defaultMethods = defaultsPlugin.methods();
-    // We should get 1 or more default plugins
-    QVERIFY(defaultMethods.count() >= 1);
+    // We can't assume amount of plugins anymore, just call to check it doesn't crash
+    defaultMethods.count();
     qDeleteAll(defaultMethods);
     defaultMethods.clear();
 

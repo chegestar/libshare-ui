@@ -1,5 +1,4 @@
 usr/bin/share-ui
 usr/lib/libshare-ui-common.so.*
-usr/lib/share-ui/plugins/lib*.so
 usr/share/dbus-1/services/com.nokia.ShareUi.service
 usr/lib/libshare-widgets.so.*
