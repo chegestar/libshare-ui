@@ -67,6 +67,7 @@ int main (int argc, char **argv) {
 
     if (run_standalone == true) {
         QStringList itemList;
+        QStringList argumentList = QCoreApplication::arguments();
 
         for (int i = 1; i < argc; i++) {
             if(argv[i][0] == '-') {
@@ -74,7 +75,7 @@ int main (int argc, char **argv) {
                 continue;
             }
             
-            QString input = argv[i];
+            QString input = argumentList[i];
             
             //Simple input cleaner
             if (input.startsWith ("data:") == true) {
