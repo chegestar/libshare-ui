@@ -1,3 +1,9 @@
+libshare-ui (1.1.24.1) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 16 Jun 2011 11:16:01 +0530
+
 libshare-ui (1.1.23.1) unstable; urgency=low
 
   * Fixes for handling percent encoding
