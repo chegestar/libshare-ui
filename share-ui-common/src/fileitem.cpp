@@ -229,7 +229,7 @@ QList<QSharedPointer<Item> > FileItem::createList (
             fileItem->d_ptr->m_duration = duration;
             fileItem->d_ptr->m_contentCreated = created;
             fileItem->d_ptr->m_lastModified = modified;
-            fileItem->d_ptr->m_encodedFileUrl = fUri;
+            fileItem->d_ptr->m_encodedFileUrl = QUrl::fromEncoded(fUri.toUtf8());
 
             fileItem->d_ptr->m_sparqlConnection = &connection;
 
@@ -264,7 +264,7 @@ QString FileItem::fileDescription () const {
 }
 
 QString FileItem::fileUri () const {
-    return d_ptr->m_filepathUri.toString();
+    return d_ptr->m_filepathUri.toEncoded();
 }
 
 QUrl FileItem::URI() const {
@@ -272,17 +272,7 @@ QUrl FileItem::URI() const {
 }
 
 QString FileItem::filePath () const {
-    /* Need to get the local file path with the percent encoding. Otherwise, if
-     * the path had characters like '#' in the file name, they would get
-     * stripped when toLocalFile is called. For instance, if the file name was
-     * abc@#.jpg, then calling toLocalFile on a QUrl set for this file without
-     * the percent encoding would return only abc@. So, call toLocalFile on
-     * QUrl having set for this file with the percent encoding. Then remove the
-     * percent encoding to get the actual file path
-     */
-    QString pathWithEncoding = d_ptr->m_encodedFileUrl.toLocalFile ();
-    QString fPath = QUrl::fromPercentEncoding (pathWithEncoding.toAscii());
-    return fPath;
+   return d_ptr->m_encodedFileUrl.toLocalFile ();
 }
 
 int FileItem::duration () const {
@@ -377,10 +367,9 @@ FileItemPrivate::~FileItemPrivate () {
 }
 
 QUrl FileItemPrivate::unencodedUrl (QUrl url) {
-    QByteArray array = url.toString().toAscii();
-    QString string = QUrl::fromPercentEncoding (array);
+    QByteArray array = url.toString().toUtf8();
 
-    return QUrl (string);
+    return QUrl::fromEncoded (array);
 }
 
 void FileItemPrivate::updateFromTracker() {

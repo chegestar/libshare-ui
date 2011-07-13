@@ -1,6 +1,6 @@
 libshare-ui (1.1.24.1) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#270945 - Empty share UI is launched when trying to share attached picture
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 16 Jun 2011 11:16:01 +0530
 
