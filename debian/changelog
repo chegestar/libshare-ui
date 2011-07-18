@@ -1,6 +1,7 @@
 libshare-ui (1.1.29.1) unstable; urgency=low
 
   * Fixes: NB#266794 - missing introductory api documentation for libmdatauri
+  * Fixes: NB#266827 - missing introductory api documentation for libshare-ui
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 18 Jul 2011 12:13:07 +0300
 
