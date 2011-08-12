@@ -1,6 +1,6 @@
-libshare-ui (1.1.29.2) unstable; urgency=low
+libshare-ui (1.1.32.1) unstable; urgency=low
 
-  * After tagging
+  * Bump version
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Wed, 20 Jul 2011 15:13:05 +0300
 
