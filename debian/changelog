@@ -1,3 +1,9 @@
+libshare-ui (1.2.42.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Mon, 17 Oct 2011 19:37:00 +0300
+
 libshare-ui (1.2.42.1) unstable; urgency=low
 
   * Performance optimizations for FileItem
