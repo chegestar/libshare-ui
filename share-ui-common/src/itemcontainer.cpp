@@ -117,9 +117,7 @@ bool ItemContainerPrivate::appendItems (const QStringList & constructInfo) {
     items.clear();
         
     items = FileItem::createList (ownList);
-    cleanList (ownList, items);
     m_items += items;
-    items.clear();
         
     // Add to waiting list...
     for (int i = 0; i < m_items.count(); ++i) {

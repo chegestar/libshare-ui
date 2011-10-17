@@ -77,13 +77,12 @@ QList<QSharedPointer<Item> > FileItem::createList (
     QString fileUrls;
     QList<QUrl> trackerUriList;
     QString trackerUris;
-    bool hasTrackerUriAlternative = false;
-    bool hasFileUrlAlternative = false;
+
+    int itemCount = constructInfoList.count();
     
-    int alternativeSize = 0;
     // For each item in constructInfoList, check if it is a tracker IRI or a
     // fileURI
-    for (int i = 0; i < constructInfoList.count(); ++i) {
+    for (int i = 0; i < itemCount; ++i) {
         
         bool isTrackerIri = true;
     
@@ -107,8 +106,6 @@ QList<QSharedPointer<Item> > FileItem::createList (
         if (isTrackerIri == true) {
             trackerUriList.append (fUrl);
             trackerUris.append (QString("'%1',").arg(fUrl.toString()));
-            if (hasTrackerUriAlternative == false) alternativeSize++;
-            hasTrackerUriAlternative = true;
         } else {
             //Make sure URI has proper encoding
             // QUrl::toEncoded does not work since it does not encode the ';'
@@ -122,10 +119,21 @@ QList<QSharedPointer<Item> > FileItem::createList (
                 qDebug() << "Escaped the \' character";
             }
             fileUrlList.append (encodedUrl);
-            DBG_STREAM << "Searching tracker for file:" << encodedUrl;
             fileUrls.append (QString("'%1',").arg(QString(encodedUrl)));
-            if (hasFileUrlAlternative == false) alternativeSize++;
-            hasFileUrlAlternative = true;
+        }
+
+        // Try to predict required memory usage and avoid repeated reallocations.
+        // Assume that all the items will be of the same type (file URL or
+        // tracker URI).
+        if (i == 0) {
+            if (!trackerUriList.isEmpty()) {
+                trackerUriList.reserve(itemCount);
+                trackerUris.reserve(trackerUris.size() * itemCount);
+            }
+            else if (!fileUrlList.isEmpty()) {
+                fileUrlList.reserve(itemCount);
+                fileUrls.reserve(fileUrls.size() * itemCount);
+            }
         }
     }
     
@@ -146,12 +154,32 @@ QList<QSharedPointer<Item> > FileItem::createList (
         "OPTIONAL { ?f nie:description ?desc } "
         "OPTIONAL { ?f nie:contentCreated ?created } "
         "OPTIONAL { ?f nfo:fileLastModified ?modified } "
-        "OPTIONAL { ?f nfo:duration ?duration } "
-        "FILTER (str(?f) in (%1) || ?url in (%2)) }")
-        .arg(trackerUris)
-        .arg(fileUrls);
+        "OPTIONAL { ?f nfo:duration ?duration } ");
 
-    QSparqlQuery query(queryStr);
+    QSparqlQuery query;
+
+    if (itemCount == 1) {
+        queryStr += '}';
+        if (!trackerUris.isEmpty()) {
+            queryStr.replace("?f", "?:f");
+            query.setQuery(queryStr);
+            query.bindValue("f", QUrl(trackerUris.mid(1, trackerUris.length() - 2)));
+        }
+        else {
+            queryStr.replace("?url", "?:url");
+            query.setQuery(queryStr);
+            query.bindValue("url", fileUrls.mid(1, fileUrls.length() - 2));
+        }
+    }
+    else {
+        queryStr += QString("FILTER (str(?f) in (%1) || ?url in (%2)) }")
+            .arg(trackerUris)
+            .arg(fileUrls);
+        query.setQuery(queryStr);
+    }
+
+    DBG_STREAM << "Making Sparql query";
+
     QSparqlResult *result = connection.exec(query);
     result->waitForFinished();
     int rowCount = 0;
@@ -165,6 +193,8 @@ QList<QSharedPointer<Item> > FileItem::createList (
 
     QStringList input (constructInfoList);
     DBG_STREAM << "Tracker reply has" << rowCount << "row(s)";
+
+    list.reserve(rowCount);
     
     for (int row = 0; row < rowCount; ++row) {
         result->next();
@@ -190,58 +220,30 @@ QList<QSharedPointer<Item> > FileItem::createList (
         QDateTime modified = result->binding(8).value().toDateTime();
         int duration = result->binding(9).value().toInt();
 
-        QString constructInfo;
         QUrl unencodedFilePathUri = FileItemPrivate::unencodedUrl (fUri);
-        
-        if (input.removeAll (tIri) > 0) {
-            constructInfo = tIri;
-        } else if (input.removeAll (fUri) > 0) {
-            constructInfo = fUri;
-        } else {
-            QString filePath = unencodedFilePathUri.toString (
-                QUrl::RemoveScheme);
-            
-            // This has to be done manually
-            if (filePath.startsWith ("///") == true) {
-                filePath = filePath.mid (2);
-            }    
-                
-            if (input.removeAll (filePath) > 0) {
-                constructInfo = filePath;
-            } else if (input.removeAll (unencodedFilePathUri.toString()) > 0) {
-                constructInfo = unencodedFilePathUri.toString();
-            } else {
-                CRIT_STREAM << "Can't find input value for file" <<
-                    unencodedFilePathUri.toString();
-            }
-        }
-        
-        if (constructInfo.isEmpty () == false) {
-            FileItem * fileItem = new FileItem (constructInfo);
 
-            fileItem->d_ptr->m_trackerIri  = QUrl (tIri);
-            fileItem->d_ptr->m_trackerId = trackerId;
-            fileItem->d_ptr->m_filepathUri = unencodedFilePathUri;
-            fileItem->d_ptr->m_mime = mime;
-            fileItem->d_ptr->m_bytes = fileSize;
-            fileItem->d_ptr->m_title = fileTitle;
-            fileItem->d_ptr->m_desc = fileDesc;
-            fileItem->d_ptr->m_duration = duration;
-            fileItem->d_ptr->m_contentCreated = created;
-            fileItem->d_ptr->m_lastModified = modified;
-            fileItem->d_ptr->m_encodedFileUrl = QUrl::fromEncoded(fUri.toUtf8());
+        FileItem * fileItem = new FileItem (tIri);
+        fileItem->d_ptr->m_trackerIri  = QUrl (tIri);
+        fileItem->d_ptr->m_trackerId = trackerId;
+        fileItem->d_ptr->m_filepathUri = unencodedFilePathUri;
+        fileItem->d_ptr->m_mime = mime;
+        fileItem->d_ptr->m_bytes = fileSize;
+        fileItem->d_ptr->m_title = fileTitle;
+        fileItem->d_ptr->m_desc = fileDesc;
+        fileItem->d_ptr->m_duration = duration;
+        fileItem->d_ptr->m_contentCreated = created;
+        fileItem->d_ptr->m_lastModified = modified;
+        fileItem->d_ptr->m_encodedFileUrl = QUrl::fromEncoded(fUri.toUtf8());
+        fileItem->d_ptr->m_sparqlConnection = &connection;
 
-            fileItem->d_ptr->m_sparqlConnection = &connection;
-
-            QSharedPointer<Item> item (fileItem);
-            list.append (item);
-        }
+        QSharedPointer<Item> item (fileItem);
+        list.append (item);
     }
 
     delete result;
     result = 0;
     
-    DBG_STREAM << input.count() << "item(s) not accepted" << input;
+    DBG_STREAM << (itemCount - list.size()) << "item(s) not accepted";
     DBG_STREAM << __FUNCTION__ << "end";
 
     return list;
