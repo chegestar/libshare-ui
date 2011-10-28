@@ -12,7 +12,8 @@ CONFIG(profiling) {
     LIBS += -lgcov
 }
 
-QMAKE_CXXFLAGS += -O2 -Werror -Wall -fPIC
+QMAKE_CXXFLAGS += -O2 -Werror -Wall -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+QMAKE_LFLAGS += -pie -rdynamic
 
 LIBS += ../widgets/out/libshare-widgets.so
 INCLUDEPATH += ../widgets
@@ -58,7 +59,6 @@ include (share-ui-source.pri)
 
 INCLUDEPATH += .
 LIBS += ../share-ui-common/out/libshare-ui-common.so
-LIBS += -rdynamic
 
 INCLUDEPATH += ../mdatauri/MDataURI
 LIBS += ../mdatauri/out/libmdatauri.so

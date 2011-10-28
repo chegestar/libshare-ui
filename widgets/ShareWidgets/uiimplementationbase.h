@@ -21,6 +21,7 @@
 #ifndef _SHARE_WIDGETS_UI_IMPLEMENTATION_BASE_H_
 #define _SHARE_WIDGETS_UI_IMPLEMENTATION_BASE_H_
 
+#include <ShareWidgets/export.h>
 #include <QObject>
 #include <ShareWidgets/UiImplementation>
 
@@ -30,7 +31,7 @@ namespace ShareWidgets {
       \class UiImplementationBase
       \brief Adds QObject parts to UiImplementation
      */
-    class UiImplementationBase : public QObject, public
+    class SHARE_WIDGETS_EXPORT UiImplementationBase : public QObject, public
         ShareWidgets::UiImplementation {
         
     Q_OBJECT

@@ -21,6 +21,7 @@
 #ifndef _SHARE_WIDGETS_UI_LOADER_H_
 #define _SHARE_WIDGETS_UI_LOADER_H_
 
+#include <ShareWidgets/export.h>
 #include <QObject>
 #include <QApplication>
 
@@ -37,7 +38,7 @@ namespace ShareWidgets {
       \class UiLoader
       \brief Plugin loader for Share UI implementations
      */
-    class UiLoader : public QObject {
+    class SHARE_WIDGETS_EXPORT UiLoader : public QObject {
     Q_OBJECT
     public:
         /*!

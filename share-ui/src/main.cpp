@@ -37,7 +37,7 @@
 #include <QCoreApplication>
 #include <QApplication>
 
-int main (int argc, char **argv) {
+Q_DECL_EXPORT int main (int argc, char **argv) {
 
     bool run_standalone = true;
     
