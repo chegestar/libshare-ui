@@ -1,3 +1,9 @@
+libshare-ui (1.2.44.2) unstable; urgency=low
+
+  * After tagging
+
+ -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 1 Nov 2011 16:20:00 +0300
+
 libshare-ui (1.2.44.1) unstable; urgency=low
 
   * Enabled booster
