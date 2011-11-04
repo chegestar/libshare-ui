@@ -147,7 +147,8 @@ QList<QSharedPointer<Item> > FileItem::createList (
     fileUrls.chop(1);
 
     QString queryStr = QString(
-        "SELECT ?f tracker:id(?f) ?url ?mime ?size ?title ?desc ?created ?modified ?duration "
+        "SELECT ?f tracker:id(?f) ?url ?mime ?size ?title ?desc ?created "
+        "fn:timezone-from-dateTime(?created) ?modified ?duration "
         "WHERE {?f nie:url ?url ; nie:mimeType ?mime . "
         "OPTIONAL { ?f nie:byteSize ?size } "
         "OPTIONAL { ?f nie:title ?title } "
@@ -217,8 +218,11 @@ QList<QSharedPointer<Item> > FileItem::createList (
         QString fileTitle = result->binding(5).value().toString ();
         QString fileDesc = result->binding(6).value().toString ();
         QDateTime created = result->binding(7).value().toDateTime();
-        QDateTime modified = result->binding(8).value().toDateTime();
-        int duration = result->binding(9).value().toInt();
+        int localTimeZoneInSeconds = result->binding(8).value().toInt();
+        created = created.addSecs(localTimeZoneInSeconds);
+        created.setTimeSpec(Qt::LocalTime);
+        QDateTime modified = result->binding(9).value().toDateTime();
+        int duration = result->binding(10).value().toInt();
 
         QUrl unencodedFilePathUri = FileItemPrivate::unencodedUrl (fUri);
 
@@ -379,7 +383,7 @@ void FileItemPrivate::updateFromTracker() {
     DBG_STREAM << "Updating item data from tracker";
 
     QSparqlQuery query(
-        "SELECT ?size ?created ?modified ?duration { "
+        "SELECT ?size ?created fn:timezone-from-dateTime(?created) ?modified ?duration { "
         "OPTIONAL { ?:u nie:byteSize ?size } "
         "OPTIONAL { ?:u nie:contentCreated ?created } "
         "OPTIONAL { ?:u nfo:fileLastModified ?modified } "
@@ -391,8 +395,11 @@ void FileItemPrivate::updateFromTracker() {
         if (result->next()) {
             m_bytes = result->binding(0).value().toULongLong();
             m_contentCreated = result->binding(1).value().toDateTime();
-            m_lastModified = result->binding(2).value().toDateTime();
-            m_duration = result->binding(3).value().toInt();
+            int localTimeZoneInSeconds = result->binding(2).value().toInt();
+            m_contentCreated = m_contentCreated.addSecs(localTimeZoneInSeconds);
+            m_contentCreated.setTimeSpec(Qt::LocalTime);
+            m_lastModified = result->binding(3).value().toDateTime();
+            m_duration = result->binding(4).value().toInt();
         }
     }
     else {
