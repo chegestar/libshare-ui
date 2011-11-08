@@ -1,12 +1,12 @@
 libshare-ui (1.2.45.1) unstable; urgency=low
 
-  * Bump version
+  * After tagging
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 4 Nov 2011 18:16:00 +0300
 
 libshare-ui (1.2.44.2) unstable; urgency=low
 
-  * Fixed Sharing: Time stamp shows different time as in Gallery
+  * Fixes: NB#288862 - Sharing: Time stamp shows different time as in Gallery
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Tue, 1 Nov 2011 16:20:00 +0300
 
