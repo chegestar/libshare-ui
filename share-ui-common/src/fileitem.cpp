@@ -114,7 +114,7 @@ QList<QSharedPointer<Item> > FileItem::createList (
             // in the except list to the corresponding percent encoding
             QByteArray encodedUrl = 
                 QUrl::toPercentEncoding (fUrl.toString (), ":/()=&@'!,$+");
-            if (encodedUrl.indexOf ('\'') >= 0) {
+            if (itemCount > 1 && encodedUrl.indexOf ('\'') >= 0) {
                 encodedUrl.insert (encodedUrl.indexOf ('\''), "\\");
                 qDebug() << "Escaped the \' character";
             }

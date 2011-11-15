@@ -1,6 +1,6 @@
-libshare-ui (1.2.45.1) unstable; urgency=low
+libshare-ui (1.2.46.1) unstable; urgency=low
 
-  * After tagging
+  * Disabled escaping of ' character in FileItem if item count is 1
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Fri, 4 Nov 2011 18:16:00 +0300
 
