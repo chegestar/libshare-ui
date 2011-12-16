@@ -218,7 +218,8 @@ QList<QSharedPointer<Item> > FileItem::createList (
         QString fileTitle = result->binding(5).value().toString ();
         QString fileDesc = result->binding(6).value().toString ();
         QDateTime created = result->binding(7).value().toDateTime();
-        int localTimeZoneInSeconds = result->binding(8).value().toInt();
+        int localTimeZoneInSeconds =
+            qRound(result->binding(8).value().toString().toDouble());
         created = created.addSecs(localTimeZoneInSeconds);
         created.setTimeSpec(Qt::LocalTime);
         QDateTime modified = result->binding(9).value().toDateTime();

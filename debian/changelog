@@ -1,6 +1,6 @@
-libshare-ui (1.2.46.2) unstable; urgency=low
+libshare-ui (1.3.50.1) unstable; urgency=low
 
-  * After tagging
+  * Fixes: NB#295139 - Incorrect time displayed in shareUI main view
 
  -- Jukka Tiihonen <jukka.t.tiihonen@nokia.com>  Thu, 17 Nov 2011 11:24:00 +0200
 
