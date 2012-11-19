@@ -62,14 +62,18 @@ CONFIG(profiling) {
 # This is needed to get unit test things included
 QMAKE_CXXFLAGS += -DUNIT_TEST
 
-target.path = $$INSTALL_BIN
+target.path = /opt/tests/libshare-ui/
 
-sh.path  = $$INSTALL_DATA/libshare-ui-tests
-sh.files = tests.xml \
+sh.path  = /opt/tests/libshare-ui/data/
+sh.files = \
            image.jpg \
            tracker-copy.sh \
            tracker-clean.sh \
            run-test.sh
-           
+
+testdefinition.path = /opt/tests/libshare-ui/test-definition/
+testdefinition.files = tests.xml
+         
 INSTALLS += target \
             sh \
+            testdefinition
