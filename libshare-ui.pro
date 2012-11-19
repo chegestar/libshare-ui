@@ -8,9 +8,7 @@ SUBDIRS        += mdatauri \
                   widgets \                  
                   share-ui \
                   share-ui-interface \
-                  tests \
-                  translations \
-                  examples
+                  tests 
 
 # Examples
 pluginexample.path = $$INSTALL_DOC/share-ui/plugin-example
